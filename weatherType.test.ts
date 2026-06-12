@@ -6,6 +6,12 @@ describe('getWeatherTypeText', () => {
         expect(getWeatherTypeText(60)).toBe('rain, intermittent slight');
     });
 
+    it('returns fog for codes from 30 through 40', () => {
+        expect(getWeatherTypeText(30)).toBe('fog');
+        expect(getWeatherTypeText(35)).toBe('fog');
+        expect(getWeatherTypeText(40)).toBe('fog');
+    });
+
     it('pads single digit codes before lookup', () => {
         expect(getWeatherTypeText(1)).toBe('clouds generally dissolving');
     });

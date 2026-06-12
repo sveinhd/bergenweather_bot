@@ -8,6 +8,7 @@ dotenv.config();
 
 const frostBaseUrl =
 'https://frost.met.no/api/v1/obs/base?stationids=50540&elementids=air_pressure_at_sea_level,weather_type,wind_from_direction,air_temperature,wind_speed&time=latest&incobs=true';
+//best_estimate_max(air_temperature P1D),best_estimate_min(air_temperature P1D)
     
 // Create a Bluesky Agent 
 const agent = new BskyAgent({
@@ -85,11 +86,13 @@ async function fetchLatestFrostObservation() {
     });
 
     if (!response.ok) {
-        const body = await response.text();
+        const body = await response.text();        
         throw new Error(`Frost API request failed (${response.status}): ${body}`);
     }
 
-    return (await response.json()) as FrostResponse;
+    const jsonResponse = await response.json();
+    // console.info('Response:\n%s', JSON.stringify(jsonResponse, null, 2));
+    return jsonResponse as FrostResponse;
 }
 
 function getLatestObservation(series?: FrostSeries) {
@@ -316,9 +319,9 @@ function formatLatestWeatherPost(frostData: FrostResponse) {
         ? `${windDirectionArrow}`
         : 'no wind direction';
     const weatherTypeText = getWeatherTypeText(weatherTypeCode);
-    const windChillText = Number.isFinite(windChillValue) && (windChillValue !== temperature) ? `feels like ${windChillValue.toFixed(1)} °C` : '';
+    const windChillText = Number.isFinite(windChillValue) && (windChillValue !== temperature) ? `, feels like ${windChillValue.toFixed(1)} °C` : '';
 
-    return `${stationName}: ${temperatureText}, ${pressureText}, ${windText} ${windDirectionText}, ${weatherTypeText} (${formattedDate})`;
+    return `${stationName}: ${temperatureText}${windChillText}, ${pressureText}, ${windText} ${windDirectionText}, ${weatherTypeText} (${formattedDate})`;
 }
 
 function rotateWindDirection(degrees: number) {
@@ -390,6 +393,8 @@ if (process.env.CI) {
     // In GitHub Actions, just run once
     main().catch(console.error);
 } else {
+    // Run once at startup, then continue on schedule.
+    main().catch(console.error);
     // Run this on a cron job locally
     // const scheduleExpressionMinute = '* * * * *'; // Run once every minute for testing
     const scheduleExpression = '10 * * * *'; // Run once every hour
