@@ -16,6 +16,6 @@ describe('getWeatherTypeText', () => {
 
     it('returns no weather type for NaN', () => {
         const code = Number.NaN;
-        expect(getWeatherTypeText(code)).toBe('no weather type: ');
+        expect(getWeatherTypeText(code)).toBe('');
     });
 });

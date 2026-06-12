@@ -256,6 +256,9 @@ function formatLatestWeatherPost(frostData: FrostResponse) {
     const windRaw = latestWindObservation?.body?.value;
     const windDirectionRaw = latestWindDirectionObservation?.body?.value;
     const weatherTypeRaw = latestWeatherTypeObservation?.body?.value;
+    console.info("weatherTypeRaw:", weatherTypeRaw);
+
+
     const pressure = typeof pressureRaw === 'string' ? Number.parseFloat(pressureRaw) : Number.NaN;
     const temperature =
         typeof temperatureRaw === 'string' ? Number.parseFloat(temperatureRaw) : Number.NaN;
