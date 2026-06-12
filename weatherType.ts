@@ -31,8 +31,6 @@ export function getWeatherTypeText(code: number) {
             return 'rain';
         case 22:
             return 'snow';
-        case 23:
-            return 'ice pellets';
         case 24:
             return 'hail';
         default:
