@@ -26,6 +26,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Create .env file
+        run: |
+          cat > .env << EOF
+          BLUESKY_USERNAME=${{ secrets.BLUESKY_USERNAME }}
+          BLUESKY_PASSWORD=${{ secrets.BLUESKY_PASSWORD }}
+          FROST_ID=${{ secrets.FROST_ID }}
+          FROST_SECRET=${{ secrets.FROST_SECRET }}
+          EOF
+
       - name: Build
         run: npm run build
 
