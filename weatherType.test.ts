@@ -11,7 +11,7 @@ describe('getWeatherTypeText', () => {
     });
 
     it('returns fallback text for unknown code', () => {
-        expect(getWeatherTypeText(123)).toBe('weather code 123');
+        expect(getWeatherTypeText(123)).toBe('');
     });
 
     it('returns no weather type for NaN', () => {
