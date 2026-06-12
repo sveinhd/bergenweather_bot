@@ -316,9 +316,9 @@ function formatLatestWeatherPost(frostData: FrostResponse) {
         ? `${windDirectionArrow}`
         : 'no wind direction';
     const weatherTypeText = getWeatherTypeText(weatherTypeCode);
-    const windChillText = Number.isFinite(windChillValue) ? `feels like ${windChillValue.toFixed(1)} °C` : '';
+    const windChillText = Number.isFinite(windChillValue) && (windChillValue !== temperature) ? `feels like ${windChillValue.toFixed(1)} °C` : '';
 
-    return `${stationName}: ${temperatureText}, ${windChillText}, ${pressureText}, ${windText} ${windDirectionText}, ${weatherTypeText} (${formattedDate})`;
+    return `${stationName}: ${temperatureText}, ${pressureText}, ${windText} ${windDirectionText}, ${weatherTypeText} (${formattedDate})`;
 }
 
 function rotateWindDirection(degrees: number) {
@@ -412,5 +412,8 @@ function windChill(temperature: number, windSpeed: number) {
         11.37 * Math.pow(windSpeed * 3.6, 0.16) + // Convert m/s to km/h for the formula
         0.3965 * temperature * Math.pow(windSpeed * 3.6, 0.16);
 
+    if  (!Number.isFinite(windChillValue)) {
+        return temperature;
+    }    
     return windChillValue;
 }
