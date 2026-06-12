@@ -244,6 +244,7 @@ function formatLatestWeatherPost(frostData: FrostResponse) {
     const latestPressureObservation = getLatestObservation(pressureSeries);
     const latestTemperatureObservation = getLatestObservation(temperatureSeries);
     const latestWindObservation = getLatestObservation(windSeries);
+
     const latestWindDirectionObservation = getLatestObservation(
         allSeries.find((series) => series.header?.extra?.element?.id === 'wind_from_direction')
     );
@@ -278,6 +279,14 @@ function formatLatestWeatherPost(frostData: FrostResponse) {
         temperatureSeries?.header?.available?.from ??
         windSeries?.header?.available?.from;
 
+    const windChillValue = windChill(
+        typeof latestTemperatureObservation?.body?.value === 'string'
+            ? Number.parseFloat(latestTemperatureObservation.body.value)
+            : Number.NaN,
+        typeof latestWindObservation?.body?.value === 'string'
+            ? Number.parseFloat(latestWindObservation.body.value)
+            : Number.NaN
+    );
     if (!observationTime) {
         throw new Error('Could not parse observation date from Frost response');
     }
@@ -307,8 +316,9 @@ function formatLatestWeatherPost(frostData: FrostResponse) {
         ? `${windDirectionArrow}`
         : 'no wind direction';
     const weatherTypeText = getWeatherTypeText(weatherTypeCode);
+    const windChillText = Number.isFinite(windChillValue) ? `feels like ${windChillValue.toFixed(1)} °C` : '';
 
-    return `${stationName}: ${temperatureText}, ${pressureText}, ${windText} ${windDirectionText}, ${weatherTypeText} (${formattedDate})`;
+    return `${stationName}: ${temperatureText}, ${windChillText}, ${pressureText}, ${windText} ${windDirectionText}, ${weatherTypeText} (${formattedDate})`;
 }
 
 function rotateWindDirection(degrees: number) {
@@ -387,4 +397,20 @@ if (process.env.CI) {
     const job = new CronJob(scheduleExpression, main); // change to scheduleExpressionMinute for testing
 
     job.start();
+}
+
+function windChill(temperature: number, windSpeed: number) {
+    // Only calculate if  wind speed is above 4.8 km/h (1.34 m/s)
+    if (windSpeed <= 1.34) {
+        return temperature;
+    }
+
+    // Wind chill formula: W = 13.12 + 0.6215*T - 11.37*(V^0.16) + 0.3965*T*(V^0.16)
+    const windChillValue =
+        13.12 +
+        0.6215 * temperature -
+        11.37 * Math.pow(windSpeed * 3.6, 0.16) + // Convert m/s to km/h for the formula
+        0.3965 * temperature * Math.pow(windSpeed * 3.6, 0.16);
+
+    return windChillValue;
 }
