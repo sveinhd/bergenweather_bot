@@ -375,13 +375,16 @@ async function main() {
     console.log("Just posted!")
 }
 
-main();
+// Run based on environment
+if (process.env.CI) {
+    // In GitHub Actions, just run once
+    main().catch(console.error);
+} else {
+    // Run this on a cron job locally
+    // const scheduleExpressionMinute = '* * * * *'; // Run once every minute for testing
+    const scheduleExpression = '10 * * * *'; // Run once every hour
 
+    const job = new CronJob(scheduleExpression, main); // change to scheduleExpressionMinute for testing
 
-// Run this on a cron job
-// const scheduleExpressionMinute = '* * * * *'; // Run once every minute for testing
-const scheduleExpression = '10 * * * *'; // Run once every three hours in prod
-
-const job = new CronJob(scheduleExpression, main); // change to scheduleExpressionMinute for testing
-
-job.start();
+    job.start();
+}

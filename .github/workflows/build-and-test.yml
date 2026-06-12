@@ -5,6 +5,8 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ main, develop ]
+  schedule:
+    - cron: '10 * * * *'
 
 jobs:
   build-and-test:
@@ -40,3 +42,8 @@ jobs:
 
       - name: Run tests
         run: npm run test
+
+      - name: Run program
+        run: npm start
+        env:
+          CI: true
