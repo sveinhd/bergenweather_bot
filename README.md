@@ -7,6 +7,9 @@ Posts weather updates for Bergen to Bluesky using data from the Norwegian Meteor
 - Node.js 18+
 - npm
 
+Get Frost ID from https://frost.met.no/ - you need it to get observation data
+
+
 ## Setup
 
 1. Install dependencies:
