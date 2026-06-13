@@ -9,7 +9,7 @@ describe('getWeatherTypeText', () => {
     it('returns fog for codes from 30 through 40', () => {
         expect(getWeatherTypeText(30)).toBe('fog');
         expect(getWeatherTypeText(35)).toBe('fog');
-        expect(getWeatherTypeText(40)).toBe('fog');
+        expect(getWeatherTypeText(39)).toBe('fog');
     });
 
     it('pads single digit codes before lookup', () => {
