@@ -11,16 +11,16 @@ export function getWeatherTypeText(code: number) {
 
 
     
-    if (code >= 30 && code <= 40) {
+    if (code >= 30 && code < 40) {
         return 'fog';
     }
-    if (code >= 50 && code <= 60) {
+    if (code >= 50 && code < 60) {
         return 'drizzle';
     }
-    if (code >= 60 && code <= 70) {
+    if (code >= 60 && code < 70) {
         return 'rain';
     }
-    if (code >= 70 && code <= 80) {
+    if (code >= 70 && code < 80) {
         return 'snow';
     }
 

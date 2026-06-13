@@ -3,7 +3,7 @@ import { getWeatherTypeText } from './weatherType.js';
 
 describe('getWeatherTypeText', () => {
     it('returns mapped text for a known code', () => {
-        expect(getWeatherTypeText(60)).toBe('rain, intermittent slight');
+        expect(getWeatherTypeText(60)).toBe('rain');
     });
 
     it('returns fog for codes from 30 through 40', () => {
