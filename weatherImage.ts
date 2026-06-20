@@ -483,7 +483,7 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
   ctx.fillStyle = C.muted;
   ctx.textAlign = 'right';
   ctx.textBaseline = 'top';
-  ctx.fillText('Data: The Norwegian Meteorological Institute · frost.met.no', W - PAD, 330);
+  ctx.fillText('Data: MET Norway · frost.met.no  |  Icons: Yr / NRK · yr.no', W - PAD, 330);
 
   // ── Bottom label ─────────────────────────────────────────────────────────────
   setFont(ctx, 11, 'normal');

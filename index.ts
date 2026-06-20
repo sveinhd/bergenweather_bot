@@ -305,14 +305,16 @@ async function main() {
   const moonText = moonrise ? `  🌙 ${moonrise} ↑  ${moonset ?? '?'} ↓` : '';
 
   const creditLinkText = 'frost.met.no';
+  const yrLinkText = 'yr.no';
   const postText = [
     `Bergen ${tempText}  ${windText} ${windArrow}  ${iconLabel}`,
     `(${formattedDate})`,
     sunText + moonText,
-    `Data: The Norwegian Meteorological Institute (${creditLinkText})`,
+    `Data: The Norwegian Meteorological Institute (${creditLinkText})  |  Icons: Yr / NRK (${yrLinkText})`,
   ].filter(Boolean).join('\n');
 
   const creditFacet = createLinkFacet(postText, creditLinkText, 'https://frost.met.no');
+  const yrFacet = createLinkFacet(postText, yrLinkText, 'https://www.yr.no');
 
   console.log('Post text:\n' + postText);
 
@@ -326,7 +328,7 @@ async function main() {
 
   await agent.post({
     text: postText,
-    facets: creditFacet ? [creditFacet] : undefined,
+    facets: [creditFacet, yrFacet].filter(Boolean) as any[],
     embed: {
       $type: 'app.bsky.embed.images',
       images: [
