@@ -160,7 +160,7 @@ function formatSunEventTime(value?: string | null): string | undefined {
   });
 }
 
-async function fetchSunriseSunset(frostData: FrostResponse): Promise<{ sunrise?: string; sunset?: string; moonrise?: string; moonset?: string }> {
+async function fetchSunriseSunset(frostData: FrostResponse): Promise<{ sunrise?: string; sunset?: string; moonrise?: string; moonset?: string; moonPhase?: number }> {
   const coords = getStationCoordinates(frostData);
   const allSeries = frostData.data?.tseries ?? [];
   const observationTime =
