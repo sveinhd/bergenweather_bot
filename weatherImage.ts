@@ -198,7 +198,7 @@ function drawCompass(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: n
   }
 
   // Cardinal labels
-  setFont(ctx, 11, 'normal');
+  setFont(ctx, Math.max(9, Math.round(r * 0.28)), 'normal');
   ctx.fillStyle = C.secondary;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
@@ -209,10 +209,9 @@ function drawCompass(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: n
     ctx.fillText(cardinals[i], cx + Math.cos(ang) * lr, cy + Math.sin(ang) * lr);
   }
 
-  // Wind arrow pointing TOWARD where wind blows (opposite of "from" direction).
-  // Canvas 0° = right, so subtract 90° to make 0° = up (north).
-  // Arrow points to: fromDeg + 180° (the "to" direction), rotated -90° for canvas.
-  const arrowRad = (fromDeg + 90) * (Math.PI / 180);
+  // Arrow points TOWARD where wind blows: fromDeg + 180°.
+  // Meteorological degrees map directly to canvas radians (both 0=up=north).
+  const arrowRad = (fromDeg + 180) * (Math.PI / 180);
   const arrowR = r - 10;
 
   ctx.save();
@@ -368,12 +367,12 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
 
   // ── Column 1: Wind ───────────────────────────────────────────────────────────
   // Compass: 36px radius, centred vertically in the stats block, left-anchored
-  const compassR  = 28;
-  const compassCX = c1X + compassR + 2;
+  const compassR  = 38;
+  const compassCX = c1X + compassR + 4;
   const compassCY = STATS_TOP + Math.floor((STATS_BOT - STATS_TOP) / 2);
   drawCompass(ctx, compassCX, compassCY, compassR, data.windDirection);
 
-  const windTextX = compassCX + compassR + 10;   // text starts just right of compass
+  const windTextX = compassCX + compassR + 12;   // text starts just right of compass
 
   setFont(ctx, 10, 'normal');
   ctx.fillStyle = C.secondary;
