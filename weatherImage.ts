@@ -211,12 +211,15 @@ function drawCompass(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: n
     ctx.fillText(cardinals[i], cx + Math.cos(ang) * lr, cy + Math.sin(ang) * lr);
   }
 
-  // Wind arrow – points FROM origin (where wind comes from)
-  const fromRad = (fromDeg - 90) * (Math.PI / 180);
-  const arrowR = r - 12;
+  // Wind arrow pointing TOWARD where wind blows (opposite of "from" direction).
+  // Canvas 0° = right, so subtract 90° to make 0° = up (north).
+  // Arrow points to: fromDeg + 180° (the "to" direction), rotated -90° for canvas.
+  const arrowRad = (fromDeg + 90) * (Math.PI / 180);
+  const arrowR = r - 10;
+
   ctx.save();
   ctx.translate(cx, cy);
-  ctx.rotate(fromRad + Math.PI); // arrow points toward origin (where wind blows to)
+  ctx.rotate(arrowRad);
 
   // Arrowhead
   ctx.fillStyle = C.accent;
@@ -235,7 +238,6 @@ function drawCompass(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: n
   ctx.lineTo(0, arrowR - 10);
   ctx.stroke();
 
-  ctx.restore();
   ctx.restore();
 }
 
@@ -336,102 +338,120 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
   // ── Divider ──────────────────────────────────────────────────────────────────
   hline(ctx, 188, PAD, W - PAD);
 
-  // ── Wind section ─────────────────────────────────────────────────────────────
-  const compassCX = PAD + 36;
-  const compassCY = 262;
-  drawCompass(ctx, compassCX, compassCY, 36, data.windDirection);
+  // ── Stats section (Wind / Pressure / Humidity) ───────────────────────────────
+  //
+  // Canvas is 800px wide, PAD=44 each side → usable width = 712px
+  // Three equal columns: 712 / 3 ≈ 237px each
+  // Col starts: c1=44, c2=281, c3=518  separators at 277 and 514
+  //
+  const STATS_TOP  = 196;   // top of stats area (below divider)
+  const STATS_BOT  = 316;   // bottom of stats area (above bottom divider)
+  const colW       = Math.floor((W - PAD * 2) / 3);   // 237
+  const c1X        = PAD;                               // 44
+  const c2X        = PAD + colW;                        // 281
+  const c3X        = PAD + colW * 2;                    // 518
+  const sep1X      = c2X - 1;
+  const sep2X      = c3X - 1;
 
-  setFont(ctx, 11, 'normal');
+  // Separators
+  ctx.strokeStyle = C.line;
+  ctx.lineWidth = 1;
+  for (const sx of [sep1X, sep2X]) {
+    ctx.beginPath();
+    ctx.moveTo(sx, STATS_TOP + 8);
+    ctx.lineTo(sx, STATS_BOT - 8);
+    ctx.stroke();
+  }
+
+  const LABEL_Y  = STATS_TOP + 10;   // 206  section label
+  const VALUE_Y  = LABEL_Y + 16;     // 222  main value
+  const SUB_Y    = VALUE_Y + 34;     // 256  sub-line (direction / trend)
+  const GUST_Y   = SUB_Y + 16;       // 272  gust line
+
+  // ── Column 1: Wind ───────────────────────────────────────────────────────────
+  // Compass: 36px radius, centred vertically in the stats block, left-anchored
+  const compassR  = 28;
+  const compassCX = c1X + compassR + 2;
+  const compassCY = STATS_TOP + Math.floor((STATS_BOT - STATS_TOP) / 2);
+  drawCompass(ctx, compassCX, compassCY, compassR, data.windDirection);
+
+  const windTextX = compassCX + compassR + 10;   // text starts just right of compass
+
+  setFont(ctx, 10, 'normal');
   ctx.fillStyle = C.secondary;
   ctx.textAlign = 'left';
   ctx.textBaseline = 'top';
-  ctx.fillText('WIND', PAD + 86, 206);
+  ctx.fillText('WIND', windTextX, LABEL_Y);
 
-  setFont(ctx, 28, 'bold');
+  setFont(ctx, 20, 'bold');
   ctx.fillStyle = C.primary;
-  ctx.fillText(`${data.windSpeed.toFixed(1)} m/s`, PAD + 86, 222);
+  ctx.fillText(`${data.windSpeed.toFixed(1)} m/s`, windTextX, VALUE_Y);
 
-  setFont(ctx, 13, 'normal');
+  setFont(ctx, 11, 'normal');
   ctx.fillStyle = C.accent;
   const wArrow = windArrow(data.windDirection);
-  const wDir = windDirectionLabel(data.windDirection);
-  ctx.fillText(`${wArrow} from ${wDir}  ·  ${data.windDirection.toFixed(0)}°`, PAD + 86, 256);
+  const wDir   = windDirectionLabel(data.windDirection);
+  ctx.fillText(`${wArrow} from ${wDir} · ${data.windDirection.toFixed(0)}°`, windTextX, SUB_Y);
 
   if (data.windGust !== undefined) {
     ctx.fillStyle = C.label;
-    setFont(ctx, 12, 'normal');
-    const gustParts = [`gust ${data.windGust.toFixed(1)} m/s`];
-    if (data.windMax !== undefined) gustParts.push(`max ${data.windMax.toFixed(1)} m/s`);
-    ctx.fillText(gustParts.join('  ·  '), PAD + 86, 276);
+    setFont(ctx, 10, 'normal');
+    const gustParts = [`gust ${data.windGust.toFixed(1)}`];
+    if (data.windMax !== undefined) gustParts.push(`max ${data.windMax.toFixed(1)}`);
+    ctx.fillText(gustParts.join(' · ') + ' m/s', windTextX, GUST_Y);
   }
 
-  // ── Vertical separator ────────────────────────────────────────────────────────
-  const col2X = 320;
-  ctx.beginPath();
-  ctx.moveTo(col2X, 196);
-  ctx.lineTo(col2X, 306);
-  ctx.strokeStyle = C.line;
-  ctx.lineWidth = 1;
-  ctx.stroke();
+  // ── Column 2: Pressure ────────────────────────────────────────────────────────
+  const p2X = c2X + 16;
 
-  // ── Pressure section ─────────────────────────────────────────────────────────
-  setFont(ctx, 11, 'normal');
+  setFont(ctx, 10, 'normal');
   ctx.fillStyle = C.secondary;
   ctx.textAlign = 'left';
   ctx.textBaseline = 'top';
-  ctx.fillText('PRESSURE', col2X + 24, 206);
+  ctx.fillText('PRESSURE', p2X, LABEL_Y);
 
-  setFont(ctx, 28, 'bold');
+  // Pressure value + unit on same baseline
+  setFont(ctx, 20, 'bold');
   ctx.fillStyle = C.primary;
-  ctx.fillText(`${data.pressure.toFixed(1)}`, col2X + 24, 222);
-
-  setFont(ctx, 14, 'normal');
+  const pressStr = `${data.pressure.toFixed(1)}`;
+  ctx.fillText(pressStr, p2X, VALUE_Y);
+  setFont(ctx, 12, 'normal');
   ctx.fillStyle = C.label;
-  ctx.fillText('hPa', col2X + 24 + ctx.measureText(`${data.pressure.toFixed(1)}`).width + 6, 232);
+  ctx.fillText(' hPa', p2X + ctx.measureText(pressStr).width, VALUE_Y + 4);
 
   const trend = pressureTrendText(data.pressureTendency);
-  setFont(ctx, 13, 'normal');
-  ctx.fillStyle = trend.color;
-  ctx.fillText(trend.label, col2X + 24, 258);
-
-  // ── Vertical separator ────────────────────────────────────────────────────────
-  const col3X = 560;
-  ctx.beginPath();
-  ctx.moveTo(col3X, 196);
-  ctx.lineTo(col3X, 306);
-  ctx.strokeStyle = C.line;
-  ctx.lineWidth = 1;
-  ctx.stroke();
-
-  // ── Humidity section ─────────────────────────────────────────────────────────
   setFont(ctx, 11, 'normal');
+  ctx.fillStyle = trend.color;
+  ctx.fillText(trend.label, p2X, SUB_Y);
+
+  // ── Column 3: Humidity ────────────────────────────────────────────────────────
+  const p3X  = c3X + 16;
+  const barW = W - PAD - p3X - 4;
+
+  setFont(ctx, 10, 'normal');
   ctx.fillStyle = C.secondary;
   ctx.textAlign = 'left';
   ctx.textBaseline = 'top';
-  ctx.fillText('HUMIDITY', col3X + 24, 206);
+  ctx.fillText('HUMIDITY', p3X, LABEL_Y);
 
   if (data.humidity !== undefined) {
-    setFont(ctx, 28, 'bold');
+    setFont(ctx, 20, 'bold');
     ctx.fillStyle = C.primary;
-    ctx.fillText(`${data.humidity.toFixed(0)}%`, col3X + 24, 222);
+    ctx.fillText(`${data.humidity.toFixed(0)}%`, p3X, VALUE_Y);
+
+    // Bar
+    const barY = SUB_Y + 2;
+    const barH = 5;
+    ctx.fillStyle = C.line;
+    ctx.roundRect(p3X, barY, barW, barH, 2);
+    ctx.fill();
+    ctx.fillStyle = C.accent;
+    ctx.roundRect(p3X, barY, barW * (data.humidity / 100), barH, 2);
+    ctx.fill();
   } else {
     setFont(ctx, 16, 'normal');
     ctx.fillStyle = C.muted;
-    ctx.fillText('—', col3X + 24, 226);
-  }
-
-  // Humidity bar
-  if (data.humidity !== undefined) {
-    const barX = col3X + 24;
-    const barY = 260;
-    const barW = W - PAD - col3X - 24;
-    const barH = 6;
-    ctx.fillStyle = C.line;
-    ctx.roundRect(barX, barY, barW, barH, 3);
-    ctx.fill();
-    ctx.fillStyle = C.accent;
-    ctx.roundRect(barX, barY, barW * (data.humidity / 100), barH, 3);
-    ctx.fill();
+    ctx.fillText('—', p3X, VALUE_Y);
   }
 
   // ── Bottom divider ────────────────────────────────────────────────────────────
@@ -451,7 +471,7 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
   ctx.fillStyle = C.muted;
   ctx.textAlign = 'right';
   ctx.textBaseline = 'top';
-  ctx.fillText('Data: The Norwegian Meteorological Institute · frost.met.no / yr.no', W - PAD, 330);
+  ctx.fillText('Data: The Norwegian Meteorological Institute · frost.met.no', W - PAD, 330);
 
   // ── Bottom label ─────────────────────────────────────────────────────────────
   setFont(ctx, 11, 'normal');
