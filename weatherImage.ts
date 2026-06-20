@@ -12,6 +12,7 @@ export type WeatherImageData = {
   pressure: number;             // hPa at sea level
   pressureTendency?: number;    // hPa change over 3 h (positive = rising)
   humidity?: number;            // %
+  cloudCover?: number;          // oktas 0–8 (cloud_area_fraction)
   weatherTypeCode: number;      // WW synop code 0–99
   observationTime: string;      // ISO 8601
   sunrise?: string;             // HH:MM local
@@ -43,14 +44,24 @@ const C = {
 
 type IconKind = 'sun' | 'partcloud' | 'moon' | 'partcloudnight' | 'cloud' | 'rain' | 'sleet' | 'snow' | 'thunder' | 'fog';
 
-export function classifyWeatherIcon(wwCode: number, isNight = false): IconKind {
-  if (!Number.isFinite(wwCode)) return 'cloud';
-  const w = Math.round(wwCode);
-  if (w <= 2)              return isNight ? 'moon' : 'sun';
-  if (w <= 9)              return isNight ? 'partcloudnight' : 'partcloud';
+/**
+ * Classify the weather icon to display.
+ *
+ * Priority:
+ * 1. WW code signals precipitation or special phenomena → use that (rain/snow/thunder/fog).
+ * 2. Otherwise use cloud_area_fraction (oktas) as the primary sky-cover signal:
+ *      0–1  → clear  (sun / moon)
+ *      2–4  → partly cloudy
+ *      5–6  → mostly cloudy (cloud icon, no sun)
+ *      7–8  → overcast
+ * 3. Fall back to WW code if oktas are unavailable.
+ */
+export function classifyWeatherIcon(wwCode: number, isNight = false, oktas?: number): IconKind {
+  const w = Number.isFinite(wwCode) ? Math.round(wwCode) : -1;
+
+  // WW codes that signal actual weather phenomena take priority over cloud cover
   if (w >= 10 && w <= 19) return 'fog';
-  if (w >= 20 && w <= 29) return 'cloud';
-  if (w >= 30 && w <= 39) return 'fog';       // dust / sand / haze
+  if (w >= 30 && w <= 39) return 'fog';
   if (w >= 40 && w <= 49) return 'fog';
   if (w >= 50 && w <= 69) return 'rain';
   if (w >= 70 && w <= 79) return 'snow';
@@ -58,6 +69,17 @@ export function classifyWeatherIcon(wwCode: number, isNight = false): IconKind {
   if (w >= 85 && w <= 86) return 'snow';
   if (w >= 87 && w <= 89) return 'sleet';
   if (w >= 90 && w <= 99) return 'thunder';
+
+  // For WW 0–9 (no significant weather) use oktas as the sky-cover truth
+  if (Number.isFinite(oktas)) {
+    if (oktas! <= 1) return isNight ? 'moon'           : 'sun';
+    if (oktas! <= 4) return isNight ? 'partcloudnight' : 'partcloud';
+    return 'cloud';   // 5–8 oktas: cloudy / overcast
+  }
+
+  // Fallback: WW code only
+  if (w <= 2)  return isNight ? 'moon'           : 'sun';
+  if (w <= 9)  return isNight ? 'partcloudnight' : 'partcloud';
   return 'cloud';
 }
 
@@ -392,7 +414,7 @@ export function generateWeatherImage(data: WeatherImageData): Buffer {
   const canvas = createCanvas(W, H);
   const ctx = canvas.getContext('2d');
 
-  const iconKind = classifyWeatherIcon(data.weatherTypeCode, data.isNight ?? false);
+  const iconKind = classifyWeatherIcon(data.weatherTypeCode, data.isNight ?? false, data.cloudCover);
   const accent = accentColor(iconKind);
 
   // ── Background ──────────────────────────────────────────────────────────────

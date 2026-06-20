@@ -17,7 +17,8 @@ const frostBaseUrl =
   'wind_speed,' +
   'max(wind_speed_of_gust PT1H),' +
   'max(wind_speed PT1H),' +
-  'relative_humidity' +
+  'relative_humidity,' +
+  'cloud_area_fraction' +
   '&time=latest&incobs=true';
 
 const agent = new BskyAgent({ service: 'https://bsky.social' });
@@ -223,6 +224,9 @@ async function main() {
   const windMax         = obsNumber(findSeries(frostData, 'max(wind_speed PT1H)'));
   const humidity        = obsNumber(findSeries(frostData, 'relative_humidity'));
   const weatherTypeCode = obsNumber(findSeries(frostData, 'weather_type'));
+  const cloudCover      = obsNumber(findSeries(frostData, 'cloud_area_fraction')); // oktas 0–8
+
+  console.log('cloud_area_fraction (oktas):', cloudCover, '  weather_type (WW):', weatherTypeCode);
 
   const observationTime =
     getLatestObservation(findSeries(frostData, 'air_temperature'))?.time ??
@@ -265,6 +269,7 @@ async function main() {
     pressure,
     pressureTendency: Number.isFinite(pressureTendency) ? pressureTendency : undefined,
     humidity:         Number.isFinite(humidity)  ? humidity  : undefined,
+    cloudCover:       Number.isFinite(cloudCover) ? cloudCover : undefined,
     weatherTypeCode,
     observationTime,
     sunrise,
@@ -287,7 +292,7 @@ async function main() {
   const rotatedDir = Number.isFinite(windDirection) ? rotateWindDirection(windDirection) : NaN;
   const windArrow = Number.isFinite(rotatedDir) ? getWindDirectionArrow(rotatedDir) : '';
   const weatherTypeText = getWeatherTypeText(weatherTypeCode);
-  const iconKind = classifyWeatherIcon(weatherTypeCode, isNight);
+  const iconKind = classifyWeatherIcon(weatherTypeCode, isNight, cloudCover);
   const iconLabel = weatherIconLabel(iconKind);
 
   const sunText  = sunrise && sunset ? `\n☀ ${sunrise} ↑  ${sunset} ↓` : '';
