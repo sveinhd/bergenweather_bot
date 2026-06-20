@@ -437,6 +437,78 @@ function pressureTrendText(tendency?: number): { label: string; color: string } 
  * Generate a weather card PNG as a Buffer.
  * Card size: 800 × 420 px (works well on Bluesky's image preview).
  */
+// ─── Thermometer ─────────────────────────────────────────────────────────────
+
+function drawThermometer(ctx: CanvasRenderingContext2D, x: number, y: number, h: number, tempC: number) {
+  ctx.save();
+
+  const tubeW  = 10;
+  const bulbR  = 14;
+  const tubeH  = h - bulbR;
+  const tubeX  = x - tubeW / 2;
+
+  // Temperature range for the tube: -30°C to +40°C
+  const minT   = -30;
+  const maxT   =  40;
+  const clamp  = Math.min(Math.max(tempC, minT), maxT);
+  const ratio  = (clamp - minT) / (maxT - minT);
+  const fillH  = ratio * (tubeH - 6);
+
+  const tempColor = tempC >= 0 ? '#ef4444' : '#3b82f6';
+  const tubeTop   = y;
+  const tubeBot   = y + tubeH;
+
+  // Tube background
+  ctx.beginPath();
+  ctx.roundRect(tubeX, tubeTop, tubeW, tubeH, [tubeW / 2, tubeW / 2, 0, 0]);
+  ctx.fillStyle = '#e2e8f0';
+  ctx.fill();
+
+  // Mercury fill
+  const fillTop = tubeBot - fillH - 3;
+  ctx.beginPath();
+  ctx.roundRect(tubeX + 2, fillTop, tubeW - 4, fillH + 3, [2, 2, 0, 0]);
+  ctx.fillStyle = tempColor;
+  ctx.fill();
+
+  // Tube outline
+  ctx.beginPath();
+  ctx.roundRect(tubeX, tubeTop, tubeW, tubeH, [tubeW / 2, tubeW / 2, 0, 0]);
+  ctx.strokeStyle = '#94a3b8';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  // Tick marks with labels
+  const ticks = [-20, -10, 0, 10, 20, 30];
+  ticks.forEach(t => {
+    const tr   = (t - minT) / (maxT - minT);
+    const ty   = tubeBot - tr * (tubeH - 6) - 3;
+    const isFreezing = t === 0;
+    ctx.beginPath();
+    ctx.moveTo(tubeX + tubeW, ty);
+    ctx.lineTo(tubeX + tubeW + (isFreezing ? 10 : 6), ty);
+    ctx.strokeStyle = isFreezing ? '#64748b' : '#94a3b8';
+    ctx.lineWidth = isFreezing ? 1.5 : 1;
+    ctx.stroke();
+    setFont(ctx, isFreezing ? 9 : 8, isFreezing ? 'bold' : 'normal');
+    ctx.fillStyle = isFreezing ? '#475569' : '#94a3b8';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(`${t}°`, tubeX + tubeW + 14, ty);
+  });
+
+  // Bulb
+  ctx.beginPath();
+  ctx.arc(x, tubeBot + bulbR - 2, bulbR, 0, Math.PI * 2);
+  ctx.fillStyle = tempColor;
+  ctx.fill();
+  ctx.strokeStyle = '#94a3b8';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  ctx.restore();
+}
+
 export async function generateWeatherImage(data: WeatherImageData): Promise<Buffer> {
   const W = 800;
   const H = 520;
@@ -501,17 +573,23 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
   ctx.fillText(weatherIconLabel(iconKind).toUpperCase(), iconX + ICON_SIZE / 2, iconY + ICON_SIZE + 4);
 
   // ── Temperature (main) ───────────────────────────────────────────────────────
+  const tempColor = data.temperature >= 0 ? '#ef4444' : '#3b82f6';
+
+  // Thermometer sits at x=22 with tick labels extending ~40px to the right
+  drawThermometer(ctx, 22, 30, 140, data.temperature);
+
+  const TEMP_X = 70;   // clear of thermometer tick labels
   setFont(ctx, 96, 'bold');
-  ctx.fillStyle = C.primary;
+  ctx.fillStyle = tempColor;
   ctx.textAlign = 'left';
   ctx.textBaseline = 'top';
-  ctx.fillText(`${data.temperature.toFixed(1)}°`, PAD, 46);
+  ctx.fillText(`${data.temperature.toFixed(1)}°`, TEMP_X, 46);
 
   // Feels like
   if (data.feelsLike !== undefined && Math.abs(data.feelsLike - data.temperature) >= 0.5) {
     setFont(ctx, 13, 'normal');
     ctx.fillStyle = C.label;
-    ctx.fillText(`feels like ${data.feelsLike.toFixed(1)}°C`, PAD + 2, 152);
+    ctx.fillText(`feels like ${data.feelsLike.toFixed(1)}°C`, TEMP_X, 152);
   }
 
   // Daily min / max
@@ -523,7 +601,7 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
     const parts: string[] = [];
     if (data.tempMax !== undefined) parts.push(`↑ ${data.tempMax.toFixed(1)}°`);
     if (data.tempMin !== undefined) parts.push(`↓ ${data.tempMin.toFixed(1)}°`);
-    ctx.fillText(parts.join('   '), PAD + 2, 170);
+    ctx.fillText(parts.join('   '), TEMP_X, 170);
   }
 
   // ── Divider ──────────────────────────────────────────────────────────────────
