@@ -20,7 +20,9 @@ const frostBaseUrl =
   'relative_humidity,' +
   'cloud_area_fraction,' +
   'min(air_temperature PT1D),' +
-  'max(air_temperature PT1D)' +
+  'max(air_temperature PT1D),' +
+  'sum(precipitation_amount PT1H),' +
+  'sum(precipitation_amount PT12H)' +
   '&time=latest&incobs=true';
 
 const agent = new BskyAgent({ service: 'https://bsky.social' });
@@ -42,7 +44,15 @@ type FrostSeries = {
       element?: { id?: string };
       station?: {
         shortname?: string;
-        location?: Array<{ value?: { latitude?: string; longitude?: string } }>;
+        name?: string;
+        location?: Array<{
+          value?: {
+            latitude?: string;
+            longitude?: string;
+            'elevation(masl/hs)'?: string;
+          }
+        }>;
+        alternateids?: Array<{ key?: string; id?: string }>;
       };
     };
   };
@@ -101,6 +111,31 @@ function getStationCoordinates(frostData: FrostResponse) {
     const lat = parseFloat(loc?.latitude ?? '');
     const lon = parseFloat(loc?.longitude ?? '');
     if (Number.isFinite(lat) && Number.isFinite(lon)) return { lat, lon };
+  }
+  return undefined;
+}
+
+function getStationInfo(frostData: FrostResponse) {
+  for (const series of frostData.data?.tseries ?? []) {
+    const station = series.header?.extra?.station;
+    if (!station) continue;
+    const loc = station.location?.[0]?.value;
+    const lat  = parseFloat(loc?.latitude ?? '');
+    const lon  = parseFloat(loc?.longitude ?? '');
+    const elev = loc?.['elevation(masl/hs)'];
+    const wmo  = station.alternateids?.find(a => a.key === 'WMO')?.id;
+    const wigos = station.alternateids?.find(a => a.key === 'WIGOS')?.id;
+    if (station.name) {
+      return {
+        name:      station.name,
+        shortname: station.shortname,
+        lat:       Number.isFinite(lat) ? lat : undefined,
+        lon:       Number.isFinite(lon) ? lon : undefined,
+        elevation: elev ? `${elev} m` : undefined,
+        wmo:       wmo && wmo !== 'null' ? wmo : undefined,
+        wigos:     wigos && wigos !== 'null' ? wigos : undefined,
+      };
+    }
   }
   return undefined;
 }
@@ -214,7 +249,8 @@ async function uploadWeatherImage(imageBuffer: Buffer) {
 
 async function main() {
   const frostData = await fetchLatestFrostObservation();
-  console.log('Frost series count:', frostData.data?.tseries?.length ?? 0);
+  const stationInfo = getStationInfo(frostData);
+  console.log('Station:', stationInfo);
 
   // Extract observations
   const temperature     = obsNumber(findSeries(frostData, 'air_temperature'));
@@ -229,6 +265,8 @@ async function main() {
   const cloudCover      = obsNumber(findSeries(frostData, 'cloud_area_fraction')); // oktas 0–8
   const tempMin         = obsNumber(findSeries(frostData, 'min(air_temperature PT1D)'));
   const tempMax         = obsNumber(findSeries(frostData, 'max(air_temperature PT1D)'));
+  const precip1h        = obsNumber(findSeries(frostData, 'sum(precipitation_amount PT1H)'));
+  const precip12h       = obsNumber(findSeries(frostData, 'sum(precipitation_amount PT12H)'));
 
   console.log('cloud_area_fraction (oktas):', cloudCover, '  weather_type (WW):', weatherTypeCode);
 
@@ -281,6 +319,9 @@ async function main() {
     isNight,
     tempMin:          Number.isFinite(tempMin)    ? tempMin    : undefined,
     tempMax:          Number.isFinite(tempMax)    ? tempMax    : undefined,
+    precip1h:         Number.isFinite(precip1h)   ? precip1h   : undefined,
+    precip12h:        Number.isFinite(precip12h)  ? precip12h  : undefined,
+    stationInfo,
   };
 
   const imageBuffer = await generateWeatherImage(imageData);

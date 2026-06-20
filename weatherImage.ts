@@ -20,6 +20,17 @@ export type WeatherImageData = {
   isNight?: boolean;            // true when current time is before sunrise or after sunset
   tempMin?: number;             // °C daily minimum (min(air_temperature PT1D))
   tempMax?: number;             // °C daily maximum (max(air_temperature PT1D))
+  precip1h?: number;            // mm precipitation last hour
+  precip12h?: number;           // mm precipitation last 12 hours
+  stationInfo?: {
+    name: string;
+    shortname?: string;
+    lat?: number;
+    lon?: number;
+    elevation?: string;
+    wmo?: string;
+    wigos?: string;
+  };
 };
 
 // ─── Colour palette ───────────────────────────────────────────────────────────
@@ -177,7 +188,92 @@ function accentColor(kind: IconKind): string {
   }
 }
 
-// ─── Wind compass rose ────────────────────────────────────────────────────────
+// ─── Rain gauge illustration ──────────────────────────────────────────────────
+
+function drawRainGauge(ctx: CanvasRenderingContext2D, cx: number, cy: number, mm1h?: number, mm12h?: number) {
+  ctx.save();
+
+  const gaugeW = 22;
+  const gaugeH = 64;
+  const gaugeX = cx - gaugeW / 2;
+  const gaugeY = cy - gaugeH;
+
+  // Funnel top
+  ctx.beginPath();
+  ctx.moveTo(gaugeX - 10, gaugeY - 12);
+  ctx.lineTo(gaugeX + gaugeW + 10, gaugeY - 12);
+  ctx.lineTo(gaugeX + gaugeW, gaugeY);
+  ctx.lineTo(gaugeX, gaugeY);
+  ctx.closePath();
+  ctx.fillStyle = '#bfdbfe';
+  ctx.fill();
+  ctx.strokeStyle = '#93c5fd';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  // Gauge body outline
+  ctx.beginPath();
+  ctx.roundRect(gaugeX, gaugeY, gaugeW, gaugeH, [0, 0, 4, 4]);
+  ctx.strokeStyle = '#93c5fd';
+  ctx.lineWidth = 1.5;
+  ctx.stroke();
+
+  // Water fill — scale to max 20mm for full gauge
+  const maxMm = 20;
+  const fillMm = Math.min(mm1h ?? 0, maxMm);
+  const fillH = (fillMm / maxMm) * (gaugeH - 4);
+  if (fillH > 0) {
+    ctx.beginPath();
+    ctx.roundRect(gaugeX + 1.5, gaugeY + gaugeH - fillH - 1.5, gaugeW - 3, fillH, [0, 0, 3, 3]);
+    ctx.fillStyle = '#3b82f6';
+    ctx.fill();
+  }
+
+  // Tick marks (every 5mm)
+  ctx.strokeStyle = '#93c5fd';
+  ctx.lineWidth = 1;
+  for (let t = 5; t <= maxMm; t += 5) {
+    const tickY = gaugeY + gaugeH - (t / maxMm) * (gaugeH - 4) - 1.5;
+    ctx.beginPath();
+    ctx.moveTo(gaugeX + gaugeW - 8, tickY);
+    ctx.lineTo(gaugeX + gaugeW - 1, tickY);
+    ctx.stroke();
+  }
+
+  // Stand legs
+  ctx.strokeStyle = '#93c5fd';
+  ctx.lineWidth = 1.5;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(gaugeX + 3, gaugeY + gaugeH);
+  ctx.lineTo(gaugeX - 4, gaugeY + gaugeH + 10);
+  ctx.moveTo(gaugeX + gaugeW - 3, gaugeY + gaugeH);
+  ctx.lineTo(gaugeX + gaugeW + 4, gaugeY + gaugeH + 10);
+  ctx.stroke();
+
+  // 1h label
+  const label1h = mm1h !== undefined ? `${mm1h.toFixed(1)} mm` : '— mm';
+  setFont(ctx, 13, 'bold');
+  ctx.fillStyle = '#0f172a';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(label1h, cx + gaugeW / 2 + 14, gaugeY + gaugeH * 0.35);
+
+  setFont(ctx, 10, 'normal');
+  ctx.fillStyle = '#64748b';
+  ctx.fillText('last hour', cx + gaugeW / 2 + 14, gaugeY + gaugeH * 0.35 + 16);
+
+  // 12h label if available
+  if (mm12h !== undefined) {
+    setFont(ctx, 12, 'normal');
+    ctx.fillStyle = '#475569';
+    ctx.fillText(`${mm12h.toFixed(1)} mm / 12h`, cx + gaugeW / 2 + 14, gaugeY + gaugeH * 0.35 + 34);
+  }
+
+  ctx.restore();
+}
+
+
 
 function drawCompass(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number, fromDeg: number) {
   // Outer circle
@@ -259,7 +355,7 @@ function pressureTrendText(tendency?: number): { label: string; color: string } 
  */
 export async function generateWeatherImage(data: WeatherImageData): Promise<Buffer> {
   const W = 800;
-  const H = 420;
+  const H = 500;
   const PAD = 44;
 
   const canvas = createCanvas(W, H);
@@ -469,13 +565,50 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
   // ── Bottom divider ────────────────────────────────────────────────────────────
   hline(ctx, 316, PAD, W - PAD);
 
+  // ── Precipitation ─────────────────────────────────────────────────────────────
+  if (data.precip1h !== undefined || data.precip12h !== undefined) {
+    drawRainGauge(ctx, PAD + 50, 410, data.precip1h, data.precip12h);
+  }
+
+  // ── Station info ──────────────────────────────────────────────────────────────
+  if (data.stationInfo) {
+    const s = data.stationInfo;
+    const sx = 340;
+    const sy = 330;
+    const lineH = 16;
+
+    setFont(ctx, 10, 'normal');
+    ctx.fillStyle = C.secondary;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.fillText('OBS STATION', sx, sy);
+
+    setFont(ctx, 12, 'bold');
+    ctx.fillStyle = C.primary;
+    ctx.fillText(s.name, sx, sy + lineH);
+
+    setFont(ctx, 11, 'normal');
+    ctx.fillStyle = C.label;
+    const lines: string[] = [];
+    if (s.lat !== undefined && s.lon !== undefined) {
+      lines.push(`${s.lat.toFixed(4)}° N  ${s.lon.toFixed(4)}° E`);
+    }
+    if (s.elevation)  lines.push(`Elevation: ${s.elevation}`);
+    if (s.wmo)        lines.push(`WMO: ${s.wmo}`);
+    if (s.wigos)      lines.push(`WIGOS: ${s.wigos}`);
+
+    lines.forEach((line, i) => {
+      ctx.fillText(line, sx, sy + lineH * 2 + i * lineH);
+    });
+  }
+
   // ── Sunrise / sunset ──────────────────────────────────────────────────────────
   if (data.sunrise && data.sunset) {
     setFont(ctx, 12, 'normal');
     ctx.fillStyle = C.secondary;
     ctx.textAlign = 'left';
     ctx.textBaseline = 'top';
-    ctx.fillText(`☀  ${data.sunrise} ↑   ${data.sunset} ↓`, PAD, 330);
+    ctx.fillText(`☀  ${data.sunrise} ↑   ${data.sunset} ↓`, PAD, 430);
   }
 
   // ── Credit ────────────────────────────────────────────────────────────────────
@@ -483,7 +616,7 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
   ctx.fillStyle = C.muted;
   ctx.textAlign = 'right';
   ctx.textBaseline = 'top';
-  ctx.fillText('Data: MET Norway · frost.met.no  |  Icons: Yr / NRK · yr.no', W - PAD, 330);
+  ctx.fillText('Data: MET Norway · frost.met.no  |  Icons: Yr / NRK · yr.no', W - PAD, 430);
 
   // ── Bottom label ─────────────────────────────────────────────────────────────
   setFont(ctx, 11, 'normal');
