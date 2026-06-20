@@ -1,4 +1,4 @@
-import enWeatherTypeMap from './locals/en.json';
+import enWeatherTypeMap from './locals/en.json' with { type: 'json' };
 
 type WeatherTypeMap = Record<string, string>;
 

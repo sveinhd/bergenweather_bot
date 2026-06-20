@@ -18,6 +18,8 @@ export type WeatherImageData = {
   sunrise?: string;             // HH:MM local
   sunset?: string;              // HH:MM local
   isNight?: boolean;            // true when current time is before sunrise or after sunset
+  tempMin?: number;             // °C daily minimum (min(air_temperature PT1D))
+  tempMax?: number;             // °C daily maximum (max(air_temperature PT1D))
 };
 
 // ─── Colour palette ───────────────────────────────────────────────────────────
@@ -327,9 +329,21 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
 
   // Feels like
   if (data.feelsLike !== undefined && Math.abs(data.feelsLike - data.temperature) >= 0.5) {
-    setFont(ctx, 14, 'normal');
+    setFont(ctx, 13, 'normal');
     ctx.fillStyle = C.label;
-    ctx.fillText(`feels like ${data.feelsLike.toFixed(1)}°C`, PAD + 2, 156);
+    ctx.fillText(`feels like ${data.feelsLike.toFixed(1)}°C`, PAD + 2, 152);
+  }
+
+  // Daily min / max
+  if (data.tempMin !== undefined || data.tempMax !== undefined) {
+    setFont(ctx, 13, 'normal');
+    ctx.fillStyle = C.label;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    const parts: string[] = [];
+    if (data.tempMax !== undefined) parts.push(`↑ ${data.tempMax.toFixed(1)}°`);
+    if (data.tempMin !== undefined) parts.push(`↓ ${data.tempMin.toFixed(1)}°`);
+    ctx.fillText(parts.join('   '), PAD + 2, 170);
   }
 
   // ── Divider ──────────────────────────────────────────────────────────────────
@@ -412,9 +426,10 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
   ctx.fillStyle = C.primary;
   const pressStr = `${data.pressure.toFixed(1)}`;
   ctx.fillText(pressStr, p2X, VALUE_Y);
+  const pressStrWidth = ctx.measureText(pressStr).width;  // measure while font is still 20px bold
   setFont(ctx, 12, 'normal');
   ctx.fillStyle = C.label;
-  ctx.fillText(' hPa', p2X + ctx.measureText(pressStr).width, VALUE_Y + 4);
+  ctx.fillText(' hPa', p2X + pressStrWidth, VALUE_Y);
 
   const trend = pressureTrendText(data.pressureTendency);
   setFont(ctx, 11, 'normal');

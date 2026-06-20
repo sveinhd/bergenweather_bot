@@ -18,7 +18,9 @@ const frostBaseUrl =
   'max(wind_speed_of_gust PT1H),' +
   'max(wind_speed PT1H),' +
   'relative_humidity,' +
-  'cloud_area_fraction' +
+  'cloud_area_fraction,' +
+  'min(air_temperature PT1D),' +
+  'max(air_temperature PT1D)' +
   '&time=latest&incobs=true';
 
 const agent = new BskyAgent({ service: 'https://bsky.social' });
@@ -225,6 +227,8 @@ async function main() {
   const humidity        = obsNumber(findSeries(frostData, 'relative_humidity'));
   const weatherTypeCode = obsNumber(findSeries(frostData, 'weather_type'));
   const cloudCover      = obsNumber(findSeries(frostData, 'cloud_area_fraction')); // oktas 0–8
+  const tempMin         = obsNumber(findSeries(frostData, 'min(air_temperature PT1D)'));
+  const tempMax         = obsNumber(findSeries(frostData, 'max(air_temperature PT1D)'));
 
   console.log('cloud_area_fraction (oktas):', cloudCover, '  weather_type (WW):', weatherTypeCode);
 
@@ -264,17 +268,19 @@ async function main() {
     feelsLike,
     windSpeed,
     windDirection,
-    windGust:         Number.isFinite(windGust)  ? windGust  : undefined,
-    windMax:          Number.isFinite(windMax)   ? windMax   : undefined,
+    windGust:         Number.isFinite(windGust)   ? windGust   : undefined,
+    windMax:          Number.isFinite(windMax)    ? windMax    : undefined,
     pressure,
     pressureTendency: Number.isFinite(pressureTendency) ? pressureTendency : undefined,
-    humidity:         Number.isFinite(humidity)  ? humidity  : undefined,
+    humidity:         Number.isFinite(humidity)   ? humidity   : undefined,
     cloudCover:       Number.isFinite(cloudCover) ? cloudCover : undefined,
     weatherTypeCode,
     observationTime,
     sunrise,
     sunset,
     isNight,
+    tempMin:          Number.isFinite(tempMin)    ? tempMin    : undefined,
+    tempMax:          Number.isFinite(tempMax)    ? tempMax    : undefined,
   };
 
   const imageBuffer = await generateWeatherImage(imageData);
