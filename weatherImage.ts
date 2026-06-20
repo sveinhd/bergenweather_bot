@@ -280,7 +280,7 @@ function drawRainGauge(ctx: CanvasRenderingContext2D, cx: number, cy: number, mm
 
 // ─── Moon phase ───────────────────────────────────────────────────────────────
 
-function moonPhaseLabel(deg: number): string {
+export function moonPhaseLabel(deg: number): string {
   if (deg < 5 || deg >= 355)  return 'New moon';
   if (deg < 85)               return 'Waxing crescent';
   if (deg < 95)               return 'First quarter';
@@ -435,7 +435,7 @@ function pressureTrendText(tendency?: number): { label: string; color: string } 
  */
 export async function generateWeatherImage(data: WeatherImageData): Promise<Buffer> {
   const W = 800;
-  const H = 500;
+  const H = 520;
   const PAD = 44;
 
   const canvas = createCanvas(W, H);
@@ -767,7 +767,7 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
   ctx.fillStyle = C.muted;
   ctx.textAlign = 'right';
   ctx.textBaseline = 'top';
-  ctx.fillText('Data: MET Norway · frost.met.no  |  Icons: Yr / NRK · yr.no', W - PAD, 430);
+  ctx.fillText('Data: MET Norway · frost.met.no  |  Icons: Yr / NRK · yr.no', W - PAD, 462);
 
   // ── Bottom label ─────────────────────────────────────────────────────────────
   setFont(ctx, 11, 'normal');

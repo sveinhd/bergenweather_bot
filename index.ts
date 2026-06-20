@@ -3,7 +3,7 @@ import * as dotenv from 'dotenv';
 import { CronJob } from 'cron';
 import * as process from 'process';
 import { getWeatherTypeText } from './weatherType.js';
-import { generateWeatherImage, WeatherImageData, classifyWeatherIcon, weatherIconLabel } from './weatherImage.js';
+import { generateWeatherImage, WeatherImageData, classifyWeatherIcon, weatherIconLabel, moonPhaseLabel } from './weatherImage.js';
 
 dotenv.config();
 
@@ -69,7 +69,7 @@ type CelestialResponse = {
     sunset?:  { time?: string | null } | null;
     moonrise?: { time?: string | null } | null;
     moonset?:  { time?: string | null } | null;
-    moonphase?: { value?: number | null } | null;
+    moonphase?: number | null;
   };
 };
 
@@ -187,19 +187,38 @@ async function fetchSunriseSunset(frostData: FrostResponse): Promise<{ sunrise?:
 
   const fetchCelestial = async (path: 'sun' | 'moon') => {
     const r = await fetch(makeUrl(path), {
-      headers: { Accept: 'application/json', 'User-Agent': 'bergenweather-bot/1.0 github.com/bergenweather_bot' },
+      headers: {
+        Accept: 'application/json',
+        'User-Agent': 'bergenweather-bot/1.0 github.com/sveinhd/bergenweather_bot',
+      },
     });
     if (!r.ok) throw new Error(`${path} API failed (${r.status}): ${await r.text()}`);
     return r.json() as Promise<CelestialResponse>;
   };
 
-  const [sunData, moonData] = await Promise.all([fetchCelestial('sun'), fetchCelestial('moon')]);
+  let sunData: CelestialResponse = {};
+  let moonData: CelestialResponse = {};
+
+  try {
+    sunData = await fetchCelestial('sun');
+    console.log('Sun API ok');
+  } catch (e) {
+    console.error('Sun API error:', e);
+  }
+
+  try {
+    moonData = await fetchCelestial('moon');
+    console.log('Moon API ok, moonphase:', moonData.properties?.moonphase);
+  } catch (e) {
+    console.error('Moon API error:', e);
+  }
+
   return {
     sunrise:   formatSunEventTime(sunData.properties?.sunrise?.time),
     sunset:    formatSunEventTime(sunData.properties?.sunset?.time),
     moonrise:  formatSunEventTime(moonData.properties?.moonrise?.time),
     moonset:   formatSunEventTime(moonData.properties?.moonset?.time),
-    moonPhase: moonData.properties?.moonphase?.value ?? undefined,
+    moonPhase: moonData.properties?.moonphase ?? undefined,
   };
 }
 
@@ -282,6 +301,7 @@ async function main() {
 
   // Sunrise / sunset
   const { sunrise, sunset, moonrise, moonset, moonPhase } = await fetchSunriseSunset(frostData);
+  console.log('moonPhase raw value:', moonPhase);
 
   // ── Night detection ───────────────────────────────────────────────────────
   function parseLocalHHMM(hhmm: string, referenceDate: Date): Date {
@@ -348,7 +368,8 @@ async function main() {
   const iconLabel = weatherIconLabel(iconKind);
 
   const sunText  = sunrise && sunset ? `\n☀ ${sunrise} ↑  ${sunset} ↓` : '';
-  const moonText = moonrise ? `  🌙 ${moonrise} ↑  ${moonset ?? '?'} ↓` : '';
+  const moonPhaseText = moonPhase !== undefined ? `  · ${moonPhaseLabel(moonPhase)}` : '';
+  const moonText = moonrise ? `  🌙 ${moonrise} ↑  ${moonset ?? '?'} ↓${moonPhaseText}` : moonPhaseText ? `  🌙${moonPhaseText}` : '';
 
   const creditLinkText = 'frost.met.no';
   const yrLinkText = 'yr.no';
@@ -372,6 +393,8 @@ async function main() {
 
   const imageBlob = await uploadWeatherImage(imageBuffer);
 
+  const altMoonPhase = moonPhase !== undefined ? `  Moon: ${moonPhaseLabel(moonPhase)}.` : '';
+
   await agent.post({
     text: postText,
     facets: [creditFacet, yrFacet].filter(Boolean) as any[],
@@ -380,7 +403,7 @@ async function main() {
       images: [
         {
           image: imageBlob,
-          alt: `Bergen weather: ${tempText}, wind ${windText} ${windArrow}, ${iconLabel}. Pressure ${Number.isFinite(pressure) ? pressure.toFixed(1) + ' hPa' : 'n/a'}. ${formattedDate}`,
+          alt: `Bergen weather: ${tempText}, wind ${windText} ${windArrow}, ${iconLabel}. Pressure ${Number.isFinite(pressure) ? pressure.toFixed(1) + ' hPa' : 'n/a'}.${altMoonPhase} ${formattedDate}`,
         },
       ],
     },
