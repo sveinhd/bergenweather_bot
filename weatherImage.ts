@@ -178,8 +178,6 @@ function accentColor(kind: IconKind): string {
 // ─── Wind compass rose ────────────────────────────────────────────────────────
 
 function drawCompass(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number, fromDeg: number) {
-  ctx.save();
-
   // Outer circle
   ctx.beginPath();
   ctx.arc(cx, cy, r, 0, Math.PI * 2);
@@ -238,7 +236,7 @@ function drawCompass(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: n
   ctx.lineTo(0, arrowR - 10);
   ctx.stroke();
 
-  ctx.restore();
+  ctx.restore();   // undo translate + rotate
 }
 
 // ─── Pressure trend bar ───────────────────────────────────────────────────────
