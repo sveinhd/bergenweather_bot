@@ -3,422 +3,320 @@ import * as dotenv from 'dotenv';
 import { CronJob } from 'cron';
 import * as process from 'process';
 import { getWeatherTypeText } from './weatherType.js';
+import { generateWeatherImage, WeatherImageData, classifyWeatherIcon, weatherIconLabel } from './weatherImage.js';
 
 dotenv.config();
 
 const frostBaseUrl =
-'https://frost.met.no/api/v1/obs/base?stationids=50540&elementids=air_pressure_at_sea_level,weather_type,wind_from_direction,air_temperature,wind_speed&time=latest&incobs=true';
-//best_estimate_max(air_temperature P1D),best_estimate_min(air_temperature P1D)
-    
-// Create a Bluesky Agent 
-const agent = new BskyAgent({
-    service: 'https://bsky.social',
-  })
+  'https://frost.met.no/api/v1/obs/base?stationids=50540&elementids=' +
+  'air_pressure_at_sea_level,' +
+  'over_time(tendency_of_surface_air_pressure PT3H),' +
+  'weather_type,' +
+  'wind_from_direction,' +
+  'air_temperature,' +
+  'wind_speed,' +
+  'max(wind_speed_of_gust PT1H),' +
+  'max(wind_speed PT1H),' +
+  'relative_humidity' +
+  '&time=latest&incobs=true';
+
+const agent = new BskyAgent({ service: 'https://bsky.social' });
+
+// ─── Frost types ──────────────────────────────────────────────────────────────
 
 type FrostObservation = {
-    time?: string;
-    body?: {
-        value?: string;
-        qualitycode?: string;
-    };
+  time?: string;
+  body?: {
+    value?: number | string;
+    qualitycode?: string;
+  };
 };
 
 type FrostSeries = {
-    header?: {
-        available?: {
-            from?: string;
-        };
-        extra?: {
-            element?: {
-                id?: string;
-            };
-            station?: {
-                shortname?: string;
-                location?: Array<{
-                    value?: {
-                        latitude?: string;
-                        longitude?: string;
-                    };
-                }>;
-            };
-        };
+  header?: {
+    available?: { from?: string };
+    extra?: {
+      element?: { id?: string };
+      station?: {
+        shortname?: string;
+        location?: Array<{ value?: { latitude?: string; longitude?: string } }>;
+      };
     };
-    observations?: FrostObservation[] | null;
+  };
+  observations?: FrostObservation[] | null;
 };
 
 type FrostResponse = {
-    data?: {
-        tstype?: string;
-        tseries?: FrostSeries[];
-    };
+  data?: { tstype?: string; tseries?: FrostSeries[] };
 };
 
 type CelestialResponse = {
-    properties?: {
-        sunrise?: {
-            time?: string | null;
-        } | null;
-        sunset?: {
-            time?: string | null;
-        } | null;
-        moonrise?: {
-            time?: string | null;
-        } | null;
-        moonset?: {
-            time?: string | null;
-        } | null;
-    };
+  properties?: {
+    sunrise?: { time?: string | null } | null;
+    sunset?:  { time?: string | null } | null;
+    moonrise?: { time?: string | null } | null;
+    moonset?:  { time?: string | null } | null;
+  };
 };
 
-async function fetchLatestFrostObservation() {
-    const frostId = process.env.FROST_ID;
+// ─── Frost helpers ────────────────────────────────────────────────────────────
 
-    if (!frostId) {
-        throw new Error('Missing FROST_ID in .env');
-    }
+async function fetchLatestFrostObservation(): Promise<FrostResponse> {
+  const frostId = process.env.FROST_ID;
+  if (!frostId) throw new Error('Missing FROST_ID in .env');
 
-    const basicAuth = btoa(`${frostId}:`);
-    const response = await fetch(frostBaseUrl, {
-        headers: {
-            Authorization: `Basic ${basicAuth}`,
-            Accept: 'application/json',
-        },
-    });
-
-    if (!response.ok) {
-        const body = await response.text();        
-        throw new Error(`Frost API request failed (${response.status}): ${body}`);
-    }
-
-    const jsonResponse = await response.json();
-    // console.info('Response:\n%s', JSON.stringify(jsonResponse, null, 2));
-    return jsonResponse as FrostResponse;
+  const response = await fetch(frostBaseUrl, {
+    headers: {
+      Authorization: `Basic ${btoa(`${frostId}:`)}`,
+      Accept: 'application/json',
+    },
+  });
+  if (!response.ok) {
+    throw new Error(`Frost API request failed (${response.status}): ${await response.text()}`);
+  }
+  return response.json() as Promise<FrostResponse>;
 }
 
-function getLatestObservation(series?: FrostSeries) {
-    const observations = series?.observations;
-    return Array.isArray(observations) && observations.length > 0
-        ? observations[observations.length - 1]
-        : undefined;
+function getLatestObservation(series?: FrostSeries): FrostObservation | undefined {
+  const obs = series?.observations;
+  return Array.isArray(obs) && obs.length > 0 ? obs[obs.length - 1] : undefined;
 }
 
-function getObservationTime(frostData: FrostResponse) {
-    const allSeries = frostData.data?.tseries ?? [];
-    const airPressureSeries = allSeries.find(
-        (series) => series.header?.extra?.element?.id === 'air_pressure_at_sea_level',
-    );
-    const temperatureSeries = allSeries.find(
-            (series) => series.header?.extra?.element?.id === 'air_temperature',
-        );
-    const windSeries = allSeries.find(
-        (series) => series.header?.extra?.element?.id === 'wind_speed',
-    );
-    const windDirectionSeries = allSeries.find(
-        (series) => series.header?.extra?.element?.id === 'wind_from_direction',
-    );
+function findSeries(frostData: FrostResponse, elementId: string): FrostSeries | undefined {
+  return frostData.data?.tseries?.find(s => s.header?.extra?.element?.id === elementId);
+}
 
-    return (
-        getLatestObservation(temperatureSeries)?.time ??
-        getLatestObservation(windSeries)?.time ??
-        getLatestObservation(windDirectionSeries)?.time ??
-        temperatureSeries?.header?.available?.from ??
-        windSeries?.header?.available?.from ??
-        airPressureSeries?.header?.available?.from
-    );
+function obsNumber(series: FrostSeries | undefined): number {
+  const raw = getLatestObservation(series)?.body?.value;
+  const n = typeof raw === 'string' ? parseFloat(raw) : Number(raw);
+  return Number.isFinite(n) ? n : NaN;
 }
 
 function getStationCoordinates(frostData: FrostResponse) {
-    const allSeries = frostData.data?.tseries ?? [];
-
-    for (const series of allSeries) {
-        const location = series.header?.extra?.station?.location?.[0]?.value;
-        const latitude = Number.parseFloat(location?.latitude ?? '');
-        const longitude = Number.parseFloat(location?.longitude ?? '');
-
-        if (Number.isFinite(latitude) && Number.isFinite(longitude)) {
-            return { latitude, longitude };
-        }
-    }
-
-    return undefined;
+  for (const series of frostData.data?.tseries ?? []) {
+    const loc = series.header?.extra?.station?.location?.[0]?.value;
+    const lat = parseFloat(loc?.latitude ?? '');
+    const lon = parseFloat(loc?.longitude ?? '');
+    if (Number.isFinite(lat) && Number.isFinite(lon)) return { lat, lon };
+  }
+  return undefined;
 }
 
-function getTimeZoneOffsetString(date: Date, timeZone: string) {
-    const formatter = new Intl.DateTimeFormat('en-US', {
-        timeZone,
-        timeZoneName: 'shortOffset',
+function getTimeZoneOffsetString(date: Date, timeZone: string): string {
+  const formatter = new Intl.DateTimeFormat('en-US', { timeZone, timeZoneName: 'shortOffset' });
+  const offsetPart = formatter.formatToParts(date).find(p => p.type === 'timeZoneName')?.value;
+  const match = offsetPart?.match(/^GMT([+-]\d{1,2})(?::?(\d{2}))?$/);
+  if (!match) return '+00:00';
+  const signedHour = parseInt(match[1], 10);
+  const sign = signedHour < 0 ? '-' : '+';
+  const hours = Math.abs(signedHour).toString().padStart(2, '0');
+  const minutes = (match[2] ?? '00').padStart(2, '0');
+  return `${sign}${hours}:${minutes}`;
+}
+
+function formatSunEventTime(value?: string | null): string | undefined {
+  if (!value) return undefined;
+  return new Date(value).toLocaleTimeString('no-NO', {
+    hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Oslo',
+  });
+}
+
+async function fetchSunriseSunset(frostData: FrostResponse): Promise<{ sunrise?: string; sunset?: string; moonrise?: string; moonset?: string }> {
+  const coords = getStationCoordinates(frostData);
+  const allSeries = frostData.data?.tseries ?? [];
+  const observationTime =
+    getLatestObservation(findSeries(frostData, 'air_temperature'))?.time ??
+    getLatestObservation(findSeries(frostData, 'wind_speed'))?.time ??
+    allSeries[0]?.header?.available?.from;
+
+  if (!coords || !observationTime) return {};
+
+  const obsDate = new Date(observationTime);
+  const date = new Intl.DateTimeFormat('en-CA', {
+    year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'Europe/Oslo',
+  }).format(obsDate);
+  const offset = getTimeZoneOffsetString(obsDate, 'Europe/Oslo');
+
+  const makeUrl = (path: 'sun' | 'moon') => {
+    const url = new URL(`https://api.met.no/weatherapi/sunrise/3.0/${path}`);
+    url.searchParams.set('lat', coords.lat.toString());
+    url.searchParams.set('lon', coords.lon.toString());
+    url.searchParams.set('date', date);
+    url.searchParams.set('offset', offset);
+    return url.toString();
+  };
+
+  const fetchCelestial = async (path: 'sun' | 'moon') => {
+    const r = await fetch(makeUrl(path), {
+      headers: { Accept: 'application/json', 'User-Agent': 'bergenweather-bot/1.0 github.com/bergenweather_bot' },
     });
-    const offsetPart = formatter.formatToParts(date).find((part) => part.type === 'timeZoneName')?.value;
-    const match = offsetPart?.match(/^GMT([+-]\d{1,2})(?::?(\d{2}))?$/);
+    if (!r.ok) throw new Error(`${path} API failed (${r.status}): ${await r.text()}`);
+    return r.json() as Promise<CelestialResponse>;
+  };
 
-    if (!match) {
-        return '+00:00';
-    }
-
-    const signedHour = Number.parseInt(match[1], 10);
-    const sign = signedHour < 0 ? '-' : '+';
-    const hours = Math.abs(signedHour).toString().padStart(2, '0');
-    const minutes = (match[2] ?? '00').padStart(2, '0');
-
-    return `${sign}${hours}:${minutes}`;
+  const [sunData, moonData] = await Promise.all([fetchCelestial('sun'), fetchCelestial('moon')]);
+  return {
+    sunrise:  formatSunEventTime(sunData.properties?.sunrise?.time),
+    sunset:   formatSunEventTime(sunData.properties?.sunset?.time),
+    moonrise: formatSunEventTime(moonData.properties?.moonrise?.time),
+    moonset:  formatSunEventTime(moonData.properties?.moonset?.time),
+  };
 }
 
-function formatSunEventTime(value?: string | null) {
-    if (!value) {
-        return 'n/a';
-    }
+// ─── Wind helpers (kept from original) ───────────────────────────────────────
 
-    return new Date(value).toLocaleTimeString('no-NO', {
-        hour: '2-digit',
-        minute: '2-digit',
-        timeZone: 'Europe/Oslo',
-    });
+function rotateWindDirection(degrees: number): number {
+  const normalized = ((degrees % 360) + 360) % 360;
+  const rotated = normalized + 180;
+  return rotated > 360 ? rotated - 360 : rotated;
 }
 
-async function fetchSunriseSunsetText(frostData: FrostResponse) {
-    const coordinates = getStationCoordinates(frostData);
-    const observationTime = getObservationTime(frostData);
-
-    if (!coordinates || !observationTime) {
-        return undefined;
-    }
-
-    const observationDate = new Date(observationTime);
-    const date = new Intl.DateTimeFormat('en-CA', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        timeZone: 'Europe/Oslo',
-    }).format(observationDate);
-    const offset = getTimeZoneOffsetString(observationDate, 'Europe/Oslo');
-
-    const createUrl = (path: 'sun' | 'moon') => {
-        const url = new URL(`https://api.met.no/weatherapi/sunrise/3.0/${path}`);
-        url.searchParams.set('lat', coordinates.latitude.toString());
-        url.searchParams.set('lon', coordinates.longitude.toString());
-        url.searchParams.set('date', date);
-        url.searchParams.set('offset', offset);
-        return url.toString();
-    };
-
-    const fetchCelestial = async (path: 'sun' | 'moon') => {
-        const response = await fetch(createUrl(path), {
-            headers: {
-                Accept: 'application/json',
-                'User-Agent': 'bergenweather-bot/1.0 github.com/bergenweather_bot',
-            },
-        });
-
-        if (!response.ok) {
-            const body = await response.text();
-            throw new Error(`${path} API request failed (${response.status}): ${body}`);
-        }
-
-        return (await response.json()) as CelestialResponse;
-    };
-
-    const [sunData, moonData] = await Promise.all([
-        fetchCelestial('sun'),
-        fetchCelestial('moon'),
-    ]);
-
-    const sunrise = formatSunEventTime(sunData.properties?.sunrise?.time);
-    const sunset = formatSunEventTime(sunData.properties?.sunset?.time);
-    const moonrise = formatSunEventTime(moonData.properties?.moonrise?.time);
-    const moonset = formatSunEventTime(moonData.properties?.moonset?.time);
-
-    return `Sun: up ${sunrise}, down ${sunset}\nMoon: up ${moonrise}, down ${moonset}`;
+function getWindDirectionArrow(degrees: number): string {
+  const normalized = ((degrees % 360) + 360) % 360;
+  if (normalized >= 337.5 || normalized < 22.5) return '↑';
+  if (normalized < 67.5)  return '↗';
+  if (normalized < 112.5) return '→';
+  if (normalized < 157.5) return '↘';
+  if (normalized < 202.5) return '↓';
+  if (normalized < 247.5) return '↙';
+  if (normalized < 292.5) return '←';
+  return '↖';
 }
 
-function formatLatestWeatherPost(frostData: FrostResponse) {
-    const allSeries = frostData.data?.tseries ?? [];
-    const stationName = allSeries[0]?.header?.extra?.station?.shortname ?? 'Bergen';
-
-    const pressureSeries = allSeries.find(
-        (series) => series.header?.extra?.element?.id === 'air_pressure_at_sea_level',
-    );
-    const temperatureSeries = allSeries.find(
-        (series) => series.header?.extra?.element?.id === 'air_temperature',
-    );
-    const windSeries = allSeries.find(
-        (series) => series.header?.extra?.element?.id === 'wind_speed',
-    );
-
-    const latestPressureObservation = getLatestObservation(pressureSeries);
-    const latestTemperatureObservation = getLatestObservation(temperatureSeries);
-    const latestWindObservation = getLatestObservation(windSeries);
-
-    const latestWindDirectionObservation = getLatestObservation(
-        allSeries.find((series) => series.header?.extra?.element?.id === 'wind_from_direction')
-    );
-    const latestWeatherTypeObservation = getLatestObservation(
-        allSeries.find((series) => series.header?.extra?.element?.id === 'weather_type')
-    );
-
-    const pressureRaw = latestPressureObservation?.body?.value;
-    const temperatureRaw = latestTemperatureObservation?.body?.value;
-    const windRaw = latestWindObservation?.body?.value;
-    const windDirectionRaw = latestWindDirectionObservation?.body?.value;
-    const weatherTypeRaw = latestWeatherTypeObservation?.body?.value;
-    console.info("weatherTypeRaw:", weatherTypeRaw);
-
-
-    const pressure = typeof pressureRaw === 'string' ? Number.parseFloat(pressureRaw) : Number.NaN;
-    const temperature =
-        typeof temperatureRaw === 'string' ? Number.parseFloat(temperatureRaw) : Number.NaN;
-    const windSpeed = typeof windRaw === 'string' ? Number.parseFloat(windRaw) : Number.NaN;
-    const windDirection = typeof windDirectionRaw === 'string' ? Number.parseFloat(windDirectionRaw) : Number.NaN;
-    const rotatedWindDirection = Number.isFinite(windDirection)
-        ? rotateWindDirection(windDirection)
-        : Number.NaN;
-    const weatherTypeCode =
-        typeof weatherTypeRaw === 'string' ? Number.parseFloat(weatherTypeRaw) : Number.NaN;
-    const observationTime =
-        latestPressureObservation?.time ??
-        latestTemperatureObservation?.time ??
-        latestWindObservation?.time ??
-        latestWindDirectionObservation?.time ??
-        pressureSeries?.header?.available?.from ??
-        temperatureSeries?.header?.available?.from ??
-        windSeries?.header?.available?.from;
-
-    const windChillValue = windChill(
-        typeof latestTemperatureObservation?.body?.value === 'string'
-            ? Number.parseFloat(latestTemperatureObservation.body.value)
-            : Number.NaN,
-        typeof latestWindObservation?.body?.value === 'string'
-            ? Number.parseFloat(latestWindObservation.body.value)
-            : Number.NaN
-    );
-    if (!observationTime) {
-        throw new Error('Could not parse observation date from Frost response');
-    }
-
-    const date = new Date(observationTime);
-    const formattedDate = date.toLocaleString('no-NO', {
-        dateStyle: 'medium',
-        timeStyle: 'short',
-        timeZone: 'Europe/Oslo',
-    });
-
-    if (!Number.isFinite(pressure) && !Number.isFinite(temperature) && !Number.isFinite(windSpeed)) {
-        return `${stationName}: no pressure, temperature or wind observation available (${formattedDate})`;
-    }
-
-    const temperatureText = Number.isFinite(temperature)
-        ? `${temperature.toFixed(1)} °C`
-        : 'no temperature';
-    const pressureText = Number.isFinite(pressure) ? `${pressure.toFixed(1)} hPa` : 'no pressure';
-    const windText = Number.isFinite(windSpeed)
-        ? `${windSpeed.toFixed(1)} m/s`
-        : 'no wind';
-    const windDirectionArrow = Number.isFinite(rotatedWindDirection)
-        ? getWindDirectionArrow(rotatedWindDirection)
-        : '';
-    const windDirectionText = Number.isFinite(rotatedWindDirection)
-        ? `${windDirectionArrow}`
-        : 'no wind direction';
-    const weatherTypeText = getWeatherTypeText(weatherTypeCode);
-    const windChillText = Number.isFinite(windChillValue) && (windChillValue !== temperature) ? `, feels like ${windChillValue.toFixed(1)} °C` : '';
-
-    return `${stationName}: ${temperatureText}${windChillText}, ${pressureText}, ${windText} ${windDirectionText}, ${weatherTypeText} (${formattedDate})`;
+function windChill(temperature: number, windSpeed: number): number {
+  if (windSpeed <= 1.34) return temperature;
+  const wc = 13.12 + 0.6215 * temperature
+    - 11.37 * Math.pow(windSpeed * 3.6, 0.16)
+    + 0.3965 * temperature * Math.pow(windSpeed * 3.6, 0.16);
+  return Number.isFinite(wc) ? wc : temperature;
 }
 
-function rotateWindDirection(degrees: number) {
-    const normalized = ((degrees % 360) + 360) % 360;
-    const rotated = normalized + 180;
-
-    return rotated > 360 ? rotated - 360 : rotated;
-}
-
-function getWindDirectionArrow(degrees: number) {
-    const normalized = ((degrees % 360) + 360) % 360;
-
-    if (normalized >= 337.5 || normalized < 22.5) return '↑';
-    if (normalized < 67.5) return '↗';
-    if (normalized < 112.5) return '→';
-    if (normalized < 157.5) return '↘';
-    if (normalized < 202.5) return '↓';
-    if (normalized < 247.5) return '↙';
-    if (normalized < 292.5) return '←';
-
-    return '↖';
-}
+// ─── Bluesky helpers ──────────────────────────────────────────────────────────
 
 function createLinkFacet(text: string, linkText: string, uri: string) {
-    const start = text.indexOf(linkText);
-    if (start === -1) {
-        return undefined;
-    }
-
-    const encoder = new TextEncoder();
-    const byteStart = encoder.encode(text.slice(0, start)).length;
-    const byteEnd = byteStart + encoder.encode(linkText).length;
-
-    return {
-        index: { byteStart, byteEnd },
-        features: [
-            {
-                $type: 'app.bsky.richtext.facet#link',
-                uri,
-            },
-        ],
-    };
+  const start = text.indexOf(linkText);
+  if (start === -1) return undefined;
+  const encoder = new TextEncoder();
+  const byteStart = encoder.encode(text.slice(0, start)).length;
+  const byteEnd = byteStart + encoder.encode(linkText).length;
+  return { index: { byteStart, byteEnd }, features: [{ $type: 'app.bsky.richtext.facet#link', uri }] };
 }
 
+async function uploadWeatherImage(imageBuffer: Buffer) {
+  const response = await agent.uploadBlob(imageBuffer, { encoding: 'image/png' });
+  return response.data.blob;
+}
+
+// ─── Main ─────────────────────────────────────────────────────────────────────
 
 async function main() {
-    const frostData = await fetchLatestFrostObservation();
-    console.log('Frost latest observation summary:', {
-        tstype: frostData.data?.tstype,
-        seriesCount: frostData.data?.tseries?.length ?? 0,
-    });
-    const weatherText = formatLatestWeatherPost(frostData);
-    const sunriseSunsetText = await fetchSunriseSunsetText(frostData);
-    const creditLinkText = 'frost.met.no';
-    const postText = `${weatherText}${sunriseSunsetText ? `\n${sunriseSunsetText}` : ''}\nData from The Norwegian Meteorological Institute (${creditLinkText})`;
-    const creditFacet = createLinkFacet(postText, creditLinkText, 'https://frost.met.no');
-    console.log('Post text:\n' + postText);
+  const frostData = await fetchLatestFrostObservation();
+  console.log('Frost series count:', frostData.data?.tseries?.length ?? 0);
 
-    await agent.login({ identifier: process.env.BLUESKY_USERNAME!, password: process.env.BLUESKY_PASSWORD!})
-    await agent.post({
-        text: postText,
-        facets: creditFacet ? [creditFacet] : undefined,
-    });
-    console.log("Just posted!")
+  // Extract observations
+  const temperature     = obsNumber(findSeries(frostData, 'air_temperature'));
+  const windSpeed       = obsNumber(findSeries(frostData, 'wind_speed'));
+  const windDirection   = obsNumber(findSeries(frostData, 'wind_from_direction'));
+  const pressure        = obsNumber(findSeries(frostData, 'air_pressure_at_sea_level'));
+  const pressureTendency = obsNumber(findSeries(frostData, 'over_time(tendency_of_surface_air_pressure PT3H)'));
+  const windGust        = obsNumber(findSeries(frostData, 'max(wind_speed_of_gust PT1H)'));
+  const windMax         = obsNumber(findSeries(frostData, 'max(wind_speed PT1H)'));
+  const humidity        = obsNumber(findSeries(frostData, 'relative_humidity'));
+  const weatherTypeCode = obsNumber(findSeries(frostData, 'weather_type'));
+
+  const observationTime =
+    getLatestObservation(findSeries(frostData, 'air_temperature'))?.time ??
+    getLatestObservation(findSeries(frostData, 'wind_speed'))?.time ??
+    getLatestObservation(findSeries(frostData, 'air_pressure_at_sea_level'))?.time ??
+    new Date().toISOString();
+
+  const feelsLike = windChill(temperature, windSpeed);
+
+  // Sunrise / sunset
+  const { sunrise, sunset, moonrise, moonset } = await fetchSunriseSunset(frostData);
+
+  // ── Generate image ────────────────────────────────────────────────────────
+  const imageData: WeatherImageData = {
+    temperature,
+    feelsLike,
+    windSpeed,
+    windDirection,
+    windGust:         Number.isFinite(windGust)  ? windGust  : undefined,
+    windMax:          Number.isFinite(windMax)   ? windMax   : undefined,
+    pressure,
+    pressureTendency: Number.isFinite(pressureTendency) ? pressureTendency : undefined,
+    humidity:         Number.isFinite(humidity)  ? humidity  : undefined,
+    weatherTypeCode,
+    observationTime,
+    sunrise,
+    sunset,
+  };
+
+  const imageBuffer = generateWeatherImage(imageData);
+  console.log('Image generated, size:', imageBuffer.length, 'bytes');
+
+  // ── Build post text (kept short – card carries the data) ──────────────────
+  const stationName = frostData.data?.tseries?.[0]?.header?.extra?.station?.shortname ?? 'Bergen';
+  const date = new Date(observationTime);
+  const formattedDate = date.toLocaleString('no-NO', {
+    dateStyle: 'medium', timeStyle: 'short', timeZone: 'Europe/Oslo',
+  });
+
+  const tempText  = Number.isFinite(temperature) ? `${temperature.toFixed(1)} °C` : '?°C';
+  const windText  = Number.isFinite(windSpeed)   ? `${windSpeed.toFixed(1)} m/s` : '?';
+  const rotatedDir = Number.isFinite(windDirection) ? rotateWindDirection(windDirection) : NaN;
+  const windArrow = Number.isFinite(rotatedDir) ? getWindDirectionArrow(rotatedDir) : '';
+  const weatherTypeText = getWeatherTypeText(weatherTypeCode);
+  const iconKind = classifyWeatherIcon(weatherTypeCode);
+  const iconLabel = weatherIconLabel(iconKind);
+
+  const sunText  = sunrise && sunset ? `\n☀ ${sunrise} ↑  ${sunset} ↓` : '';
+  const moonText = moonrise ? `  🌙 ${moonrise} ↑  ${moonset ?? '?'} ↓` : '';
+
+  const creditLinkText = 'frost.met.no';
+  const postText = [
+    `Bergen ${tempText}  ${windText} ${windArrow}  ${iconLabel}`,
+    `(${formattedDate})`,
+    sunText + moonText,
+    `Data: The Norwegian Meteorological Institute (${creditLinkText})`,
+  ].filter(Boolean).join('\n');
+
+  const creditFacet = createLinkFacet(postText, creditLinkText, 'https://frost.met.no');
+
+  console.log('Post text:\n' + postText);
+
+  // ── Login & post ──────────────────────────────────────────────────────────
+  await agent.login({
+    identifier: process.env.BLUESKY_USERNAME!,
+    password:   process.env.BLUESKY_PASSWORD!,
+  });
+
+  const imageBlob = await uploadWeatherImage(imageBuffer);
+
+  await agent.post({
+    text: postText,
+    facets: creditFacet ? [creditFacet] : undefined,
+    embed: {
+      $type: 'app.bsky.embed.images',
+      images: [
+        {
+          image: imageBlob,
+          alt: `Bergen weather: ${tempText}, wind ${windText} ${windArrow}, ${iconLabel}. Pressure ${Number.isFinite(pressure) ? pressure.toFixed(1) + ' hPa' : 'n/a'}. ${formattedDate}`,
+        },
+      ],
+    },
+  });
+
+  console.log('Posted!');
 }
 
-// Run based on environment
+// ─── Entry point ──────────────────────────────────────────────────────────────
+
 if (process.env.CI) {
-    // In GitHub Actions, just run once
-    main().catch(console.error);
+  main().catch(console.error);
 } else {
-    // Run once at startup, then continue on schedule.
-    main().catch(console.error);
-    // Run this on a cron job locally
-    // const scheduleExpressionMinute = '* * * * *'; // Run once every minute for testing
-    const scheduleExpression = '10 * * * *'; // Run once every hour
-
-    const job = new CronJob(scheduleExpression, main); // change to scheduleExpressionMinute for testing
-
-    job.start();
-}
-
-function windChill(temperature: number, windSpeed: number) {
-    // Only calculate if  wind speed is above 4.8 km/h (1.34 m/s)
-    if (windSpeed <= 1.34) {
-        return temperature;
-    }
-
-    // Wind chill formula: W = 13.12 + 0.6215*T - 11.37*(V^0.16) + 0.3965*T*(V^0.16)
-    const windChillValue =
-        13.12 +
-        0.6215 * temperature -
-        11.37 * Math.pow(windSpeed * 3.6, 0.16) + // Convert m/s to km/h for the formula
-        0.3965 * temperature * Math.pow(windSpeed * 3.6, 0.16);
-
-    if  (!Number.isFinite(windChillValue)) {
-        return temperature;
-    }    
-    return windChillValue;
+  main().catch(console.error);
+  // const scheduleExpressionMinute = '* * * * *'; // every minute – for testing
+  const scheduleExpression = '10 * * * *'; // every hour at :10
+  new CronJob(scheduleExpression, main).start();
 }
