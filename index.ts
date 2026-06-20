@@ -277,7 +277,7 @@ async function main() {
     isNight,
   };
 
-  const imageBuffer = generateWeatherImage(imageData);
+  const imageBuffer = await generateWeatherImage(imageData);
   console.log('Image generated, size:', imageBuffer.length, 'bytes');
 
   // ── Build post text (kept short – card carries the data) ──────────────────

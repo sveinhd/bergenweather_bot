@@ -1,4 +1,4 @@
-import { createCanvas, CanvasRenderingContext2D } from 'canvas';
+import { createCanvas, CanvasRenderingContext2D, loadImage } from 'canvas';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -128,184 +128,34 @@ function hline(ctx: CanvasRenderingContext2D, y: number, x0 = 40, x1 = 760) {
   ctx.stroke();
 }
 
-// ─── Icon drawing ─────────────────────────────────────────────────────────────
+// ─── Yr.no weather symbol mapping ────────────────────────────────────────────
+//
+// Icons from https://nrkno.github.io/yr-weather-symbols/
+// Free to use with credit to Yr / NRK.
+// Suffix: d = day, n = night, m = polar night (mørketid). Some icons are
+// day/night-neutral and have no suffix.
 
-function drawSun(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number) {
-  ctx.save();
-  ctx.strokeStyle = C.sun;
-  ctx.lineWidth = 3;
-  ctx.lineCap = 'round';
+const YR_BASE = 'https://nrkno.github.io/yr-weather-symbols/symbols/lightmode';
 
-  // Circle
-  ctx.beginPath();
-  ctx.arc(cx, cy, r, 0, Math.PI * 2);
-  ctx.stroke();
-
-  // Rays
-  const rayLen = r * 0.45;
-  const rayStart = r + 6;
-  for (let i = 0; i < 8; i++) {
-    const angle = (i * Math.PI) / 4;
-    ctx.beginPath();
-    ctx.moveTo(cx + Math.cos(angle) * rayStart, cy + Math.sin(angle) * rayStart);
-    ctx.lineTo(cx + Math.cos(angle) * (rayStart + rayLen), cy + Math.sin(angle) * (rayStart + rayLen));
-    ctx.stroke();
-  }
-  ctx.restore();
-}
-
-function drawCloud(ctx: CanvasRenderingContext2D, cx: number, cy: number, scale: number, color = C.cloud) {
-  ctx.save();
-  ctx.fillStyle = color;
-  ctx.beginPath();
-  // Simple cloud from overlapping circles
-  ctx.arc(cx,          cy,          scale * 22, 0, Math.PI * 2);
-  ctx.arc(cx + scale * 28, cy - scale * 6,  scale * 16, 0, Math.PI * 2);
-  ctx.arc(cx - scale * 22, cy + scale * 4,  scale * 14, 0, Math.PI * 2);
-  ctx.arc(cx + scale * 10, cy - scale * 18, scale * 14, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
-}
-
-function drawRaindrops(ctx: CanvasRenderingContext2D, cx: number, cy: number, count: number, color = C.rain) {
-  ctx.save();
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 2.5;
-  ctx.lineCap = 'round';
-  const spacing = 16;
-  const startX = cx - ((count - 1) * spacing) / 2;
-  for (let i = 0; i < count; i++) {
-    ctx.beginPath();
-    ctx.moveTo(startX + i * spacing, cy);
-    ctx.lineTo(startX + i * spacing - 4, cy + 18);
-    ctx.stroke();
-  }
-  ctx.restore();
-}
-
-function drawSnowflakes(ctx: CanvasRenderingContext2D, cx: number, cy: number, count: number) {
-  ctx.save();
-  ctx.fillStyle = C.snow;
-  const spacing = 16;
-  const startX = cx - ((count - 1) * spacing) / 2;
-  for (let i = 0; i < count; i++) {
-    const x = startX + i * spacing;
-    ctx.beginPath();
-    ctx.arc(x, cy + 8, 4, 0, Math.PI * 2);
-    ctx.fill();
-    // Cross lines
-    ctx.strokeStyle = C.snow;
-    ctx.lineWidth = 2;
-    for (let a = 0; a < 3; a++) {
-      const ang = (a * Math.PI) / 3;
-      ctx.beginPath();
-      ctx.moveTo(x - Math.cos(ang) * 7, cy + 8 - Math.sin(ang) * 7);
-      ctx.lineTo(x + Math.cos(ang) * 7, cy + 8 + Math.sin(ang) * 7);
-      ctx.stroke();
-    }
-  }
-  ctx.restore();
-}
-
-function drawThunderBolt(ctx: CanvasRenderingContext2D, cx: number, cy: number) {
-  ctx.save();
-  ctx.fillStyle = C.thunder;
-  ctx.beginPath();
-  ctx.moveTo(cx + 8,  cy);
-  ctx.lineTo(cx - 4,  cy + 22);
-  ctx.lineTo(cx + 2,  cy + 22);
-  ctx.lineTo(cx - 8,  cy + 48);
-  ctx.lineTo(cx + 6,  cy + 26);
-  ctx.lineTo(cx,      cy + 26);
-  ctx.closePath();
-  ctx.fill();
-  ctx.restore();
-}
-
-function drawFog(ctx: CanvasRenderingContext2D, cx: number, cy: number) {
-  ctx.save();
-  ctx.strokeStyle = C.cloud;
-  ctx.lineWidth = 4;
-  ctx.lineCap = 'round';
-  for (let i = 0; i < 3; i++) {
-    ctx.beginPath();
-    ctx.moveTo(cx - 36, cy + i * 18);
-    ctx.lineTo(cx + 36, cy + i * 18);
-    ctx.stroke();
-  }
-  ctx.restore();
-}
-
-function drawMoon(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number) {
-  ctx.save();
-  // Crescent: full circle minus an offset circle clipped away
-  ctx.fillStyle = '#f59e0b';  // warm amber – visible on white
-  ctx.beginPath();
-  ctx.arc(cx, cy, r, 0, Math.PI * 2);
-  ctx.fill();
-
-  // Erase a chunk to make the crescent using destination-out
-  ctx.globalCompositeOperation = 'destination-out';
-  ctx.beginPath();
-  ctx.arc(cx + r * 0.55, cy - r * 0.1, r * 0.82, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.globalCompositeOperation = 'source-over';
-
-  // A couple of small stars nearby
-  ctx.fillStyle = '#94a3b8';
-  const stars = [
-    { x: cx + r + 18, y: cy - r - 10, s: 2.5 },
-    { x: cx + r + 32, y: cy - 4,      s: 1.8 },
-    { x: cx + r + 8,  y: cy + r + 8,  s: 2.0 },
-  ];
-  for (const star of stars) {
-    ctx.beginPath();
-    ctx.arc(star.x, star.y, star.s, 0, Math.PI * 2);
-    ctx.fill();
-  }
-  ctx.restore();
-}
-
-function drawWeatherIcon(ctx: CanvasRenderingContext2D, kind: IconKind, cx: number, cy: number) {
+function yrSymbolCode(kind: IconKind, isNight: boolean): string {
   switch (kind) {
-    case 'sun':
-      drawSun(ctx, cx, cy, 36);
-      break;
-    case 'partcloud':
-      drawSun(ctx, cx - 16, cy - 16, 24);
-      drawCloud(ctx, cx + 8, cy + 12, 0.8);
-      break;
-    case 'moon':
-      drawMoon(ctx, cx, cy, 36);
-      break;
-    case 'partcloudnight':
-      drawMoon(ctx, cx - 14, cy - 18, 24);
-      drawCloud(ctx, cx + 8, cy + 12, 0.8);
-      break;
-    case 'cloud':
-      drawCloud(ctx, cx, cy, 1.0);
-      break;
-    case 'rain':
-      drawCloud(ctx, cx, cy - 18, 0.9);
-      drawRaindrops(ctx, cx, cy + 22, 4);
-      break;
-    case 'sleet':
-      drawCloud(ctx, cx, cy - 18, 0.9);
-      drawRaindrops(ctx, cx - 8, cy + 22, 2);
-      drawSnowflakes(ctx, cx + 12, cy + 22, 2);
-      break;
-    case 'snow':
-      drawCloud(ctx, cx, cy - 18, 0.9);
-      drawSnowflakes(ctx, cx, cy + 22, 4);
-      break;
-    case 'thunder':
-      drawCloud(ctx, cx, cy - 18, 0.9);
-      drawThunderBolt(ctx, cx - 8, cy + 14);
-      break;
-    case 'fog':
-      drawFog(ctx, cx, cy);
-      break;
+    case 'sun':            return isNight ? '01n' : '01d';
+    case 'partcloud':      return isNight ? '02n' : '02d';
+    case 'moon':           return '01n';
+    case 'partcloudnight': return '02n';
+    case 'cloud':          return '04';
+    case 'fog':            return '15';
+    case 'rain':           return isNight ? '05n' : '09';
+    case 'sleet':          return isNight ? '07n' : '12';
+    case 'snow':           return isNight ? '08n' : '13';
+    case 'thunder':        return isNight ? '06n' : '22';
   }
+}
+
+async function fetchYrIcon(kind: IconKind, isNight: boolean): Promise<ReturnType<typeof loadImage>> {
+  const code = yrSymbolCode(kind, isNight);
+  const url = `${YR_BASE}/${code}.svg`;
+  return loadImage(url);
 }
 
 // ─── Accent bar for icon kind ─────────────────────────────────────────────────
@@ -406,7 +256,7 @@ function pressureTrendText(tendency?: number): { label: string; color: string } 
  * Generate a weather card PNG as a Buffer.
  * Card size: 800 × 420 px (works well on Bluesky's image preview).
  */
-export function generateWeatherImage(data: WeatherImageData): Buffer {
+export async function generateWeatherImage(data: WeatherImageData): Promise<Buffer> {
   const W = 800;
   const H = 420;
   const PAD = 44;
@@ -445,15 +295,29 @@ export function generateWeatherImage(data: WeatherImageData): Buffer {
   ctx.textAlign = 'right';
   ctx.fillText(formattedDate.toUpperCase(), W - PAD, 22);
 
-  // ── Weather icon (right side) ────────────────────────────────────────────────
-  drawWeatherIcon(ctx, iconKind, 660, 120);
+  // ── Weather icon (right side) — yr.no SVG ────────────────────────────────────
+  const ICON_SIZE = 120;
+  const iconX = W - PAD - ICON_SIZE;
+  const iconY = 30;
+  try {
+    const yrIcon = await fetchYrIcon(iconKind, data.isNight ?? false);
+    ctx.drawImage(yrIcon, iconX, iconY, ICON_SIZE, ICON_SIZE);
+  } catch (err) {
+    // Fallback: draw a simple circle if fetch fails
+    console.warn('Failed to fetch yr icon:', err);
+    ctx.beginPath();
+    ctx.arc(iconX + ICON_SIZE / 2, iconY + ICON_SIZE / 2, 40, 0, Math.PI * 2);
+    ctx.strokeStyle = accent;
+    ctx.lineWidth = 3;
+    ctx.stroke();
+  }
 
   // Icon label
   setFont(ctx, 12, 'normal');
   ctx.fillStyle = C.label;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'top';
-  ctx.fillText(weatherIconLabel(iconKind).toUpperCase(), 660, 180);
+  ctx.fillText(weatherIconLabel(iconKind).toUpperCase(), iconX + ICON_SIZE / 2, iconY + ICON_SIZE + 4);
 
   // ── Temperature (main) ───────────────────────────────────────────────────────
   setFont(ctx, 96, 'bold');
