@@ -25,6 +25,10 @@ export type WeatherImageData = {
   tempMax?: number;             // °C daily maximum (max(air_temperature PT1D))
   precip1h?: number;            // mm precipitation last hour
   precip12h?: number;           // mm precipitation last 12 hours
+  precipAnomaly3M?: number;     // % deviation from 1961-1990 normal over last 3 months
+  precipYTD?: number;           // mm total precipitation this year
+  lightningCount?: number;      // total strikes in southern Norway last 24h
+  lightningCTG?: number;        // cloud-to-ground strikes only
   stationInfo?: {
     name: string;
     shortname?: string;
@@ -650,7 +654,78 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
     drawRainGauge(ctx, PAD + 50, 410, data.precip1h, data.precip12h);
   }
 
-  // ── Station info ──────────────────────────────────────────────────────────────
+  // Climate precipitation stats — to the right of gauge
+  console.log('precipYTD:', data.precipYTD, 'precipAnomaly3M:', data.precipAnomaly3M);
+  if (data.precipYTD !== undefined || data.precipAnomaly3M !== undefined) {
+    const csX = PAD + 160;
+    const csY = 340;
+    const lineH = 16;
+
+    setFont(ctx, 10, 'normal');
+    ctx.fillStyle = C.secondary;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.fillText('PRECIPITATION STATS', csX, csY);
+
+    if (data.precipYTD !== undefined) {
+      setFont(ctx, 12, 'bold');
+      ctx.fillStyle = C.primary;
+      ctx.fillText(`${data.precipYTD.toFixed(0)} mm`, csX, csY + lineH);
+      setFont(ctx, 10, 'normal');
+      ctx.fillStyle = C.label;
+      ctx.fillText('year to date', csX, csY + lineH * 2);
+    }
+
+    if (data.precipAnomaly3M !== undefined) {
+      const anomalyColor = data.precipAnomaly3M >= 100 ? C.rain : '#f97316';
+      const sign = data.precipAnomaly3M >= 100 ? '+' : '';
+      setFont(ctx, 12, 'bold');
+      ctx.fillStyle = anomalyColor;
+      ctx.fillText(`${sign}${(data.precipAnomaly3M - 100).toFixed(0)}%`, csX, csY + lineH * 3);
+      setFont(ctx, 10, 'normal');
+      ctx.fillStyle = C.label;
+      ctx.fillText('vs 1961–1990 normal (3 months)', csX, csY + lineH * 4);
+    }
+  }
+
+  // ── Lightning ─────────────────────────────────────────────────────────────────
+  if (data.lightningCount !== undefined && data.lightningCount > 0) {
+    const lx = 500;
+    const ly = 340;
+
+    // Lightning bolt icon
+    ctx.save();
+    ctx.fillStyle = '#a855f7';
+    ctx.beginPath();
+    ctx.moveTo(lx + 10, ly);
+    ctx.lineTo(lx + 2,  ly + 14);
+    ctx.lineTo(lx + 8,  ly + 14);
+    ctx.lineTo(lx,      ly + 28);
+    ctx.lineTo(lx + 14, ly + 12);
+    ctx.lineTo(lx + 8,  ly + 12);
+    ctx.lineTo(lx + 14, ly);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+
+    setFont(ctx, 10, 'normal');
+    ctx.fillStyle = C.secondary;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
+    ctx.fillText('LIGHTNING (24H)', lx + 22, ly);
+
+    setFont(ctx, 20, 'bold');
+    ctx.fillStyle = '#a855f7';
+    ctx.fillText(`${data.lightningCount}`, lx + 22, ly + 14);
+
+    setFont(ctx, 10, 'normal');
+    ctx.fillStyle = C.label;
+    ctx.fillText('total strikes · Vestland', lx + 22, ly + 36);
+
+    if (data.lightningCTG !== undefined && data.lightningCTG > 0) {
+      ctx.fillText(`${data.lightningCTG} cloud-to-ground`, lx + 22, ly + 50);
+    }
+  }
   if (data.stationInfo) {
     const s = data.stationInfo;
     const sx = 340;

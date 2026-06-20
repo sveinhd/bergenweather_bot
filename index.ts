@@ -63,6 +63,116 @@ type FrostResponse = {
   data?: { tstype?: string; tseries?: FrostSeries[] };
 };
 
+type ClimateStatsResponse = {
+  data?: Array<{
+    elementId?: string;
+    observations?: Array<{ value?: string | number }>;
+  }>;
+};
+
+async function fetchClimateStats(frostId: string): Promise<{ precipAnomaly3M?: number; precipYTD?: number }> {
+  const headers = {
+    Authorization: `Basic ${btoa(`${frostId}:`)}`,
+    Accept: 'application/json',
+  };
+
+  const fetchElement = async (elementId: string, timeResolution: string): Promise<number | undefined> => {
+    const url = new URL('https://frost.met.no/observations/v0.jsonld');
+    url.searchParams.set('sources', 'SN50540:0');
+    url.searchParams.set('elements', elementId);
+    url.searchParams.set('referencetime', 'latest');
+    url.searchParams.set('timeoffsets', 'PT6H');
+    url.searchParams.set('timeresolutions', timeResolution);
+    url.searchParams.set('timeseriesids', '0');
+
+    try {
+      console.log(`Fetching: ${url.toString()}`);
+      const response = await fetch(url.toString(), { headers });
+      if (!response.ok) {
+        console.warn(`Climate stats [${elementId}] returned ${response.status}`);
+        return undefined;
+      }
+      const data = await response.json() as ClimateStatsResponse;
+      const obs = data.data?.[0]?.observations?.at(-1);
+      const val = typeof obs?.value === 'string' ? parseFloat(obs.value) : Number(obs?.value);
+      console.log(`Climate stats [${elementId}]:`, val);
+      return Number.isFinite(val) ? val : undefined;
+    } catch (e) {
+      console.warn(`Climate stats [${elementId}] failed:`, e);
+      return undefined;
+    }
+  };
+
+  const [precipAnomaly3M, precipYTD] = await Promise.all([
+    fetchElement('best_estimate_sum(precipitation_amount_anomaly P3M 1961_1990)', 'P3M'),
+    fetchElement('best_estimate_sum(precipitation_amount P1Y)', 'P1Y'),
+  ]);
+
+  console.log('Climate stats:', { precipAnomaly3M, precipYTD });
+  return { precipAnomaly3M, precipYTD };
+}
+
+// ─── Lightning ────────────────────────────────────────────────────────────────
+
+type LightningStrike = {
+  time?: string;
+  lat?: number;
+  lon?: number;
+  peakCurrent?: number;   // kA
+  cloudIndicator?: number; // 1=cloud-to-cloud, 0=cloud-to-ground
+};
+
+type LightningRaw = {
+  Epoch?: string;
+  Point?: [number, number];  // [lon, lat]
+  PeakCurrentEstimate?: number;
+  CloudIndicator?: number;
+};
+
+// Vestland county polygon — approx 59.5–61.5°N, 4.5–8°E
+const LIGHTNING_POLYGON = 'POLYGON((4.5 59.5, 8 59.5, 8 61.5, 4.5 61.5, 4.5 59.5))';
+
+async function fetchLightning(frostId: string): Promise<LightningStrike[]> {
+  const now = new Date();
+  const from = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
+  const to = now.toISOString();
+
+  const url = new URL('https://frost-rc.met.no/api/v1/lightning');
+  url.searchParams.set('referencetime', `${from}/${to}`);
+  url.searchParams.set('format', 'json');
+  url.searchParams.set('geometry', LIGHTNING_POLYGON);
+
+  try {
+    const response = await fetch(url.toString(), {
+      headers: {
+        Authorization: `Basic ${btoa(`${frostId}:`)}`,
+        Accept: 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      console.warn(`Lightning API returned ${response.status}: ${await response.text()}`);
+      return [];
+    }
+
+    const data = await response.json() as LightningRaw[];
+
+    const strikes: LightningStrike[] = data.map(s => ({
+      time:           s.Epoch,
+      lon:            s.Point?.[0],
+      lat:            s.Point?.[1],
+      peakCurrent:    s.PeakCurrentEstimate,
+      cloudIndicator: s.CloudIndicator,
+    }));
+
+    console.log(`Lightning: ${strikes.length} strikes in last 24h`);
+    return strikes;
+  } catch (e) {
+    console.warn('Lightning fetch failed:', e);
+    return [];
+  }
+}
+
 type CelestialResponse = {
   properties?: {
     sunrise?: { time?: string | null } | null;
@@ -271,6 +381,7 @@ async function uploadWeatherImage(imageBuffer: Buffer) {
 async function main() {
   const frostData = await fetchLatestFrostObservation();
   const stationInfo = getStationInfo(frostData);
+  const lightningStrikes = await fetchLightning(process.env.FROST_ID!);
   console.log('Station:', stationInfo);
 
   // Extract observations
@@ -347,6 +458,8 @@ async function main() {
     precip1h:         Number.isFinite(precip1h)   ? precip1h   : undefined,
     precip12h:        Number.isFinite(precip12h)  ? precip12h  : undefined,
     stationInfo,
+    lightningCount:   lightningStrikes.length > 0 ? lightningStrikes.length : undefined,
+    lightningCTG:     lightningStrikes.filter(s => s.cloudIndicator === 0).length || undefined,
   };
 
   const imageBuffer = await generateWeatherImage(imageData);
