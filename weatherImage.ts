@@ -23,21 +23,21 @@ export type WeatherImageData = {
 // ─── Colour palette ───────────────────────────────────────────────────────────
 
 const C = {
-  bg:          '#18181b',
-  bgCard:      '#1c1c1f',
-  line:        '#27272a',
-  muted:       '#52525b',
-  secondary:   '#71717a',
-  label:       '#a1a1aa',
-  primary:     '#f4f4f5',
-  accent:      '#60a5fa',   // blue – wind / info
-  sun:         '#facc15',   // yellow – sun
-  rain:        '#93c5fd',   // light blue – rain
-  snow:        '#bfdbfe',   // pale blue – snow
-  thunder:     '#a78bfa',   // purple – thunder
-  cloud:       '#9ca3af',   // grey – cloud
-  green:       '#34d399',   // rising pressure
-  red:         '#f87171',   // falling pressure
+  bg:          '#ffffff',
+  bgCard:      '#f8fafc',
+  line:        '#e2e8f0',
+  muted:       '#94a3b8',
+  secondary:   '#64748b',
+  label:       '#475569',
+  primary:     '#0f172a',
+  accent:      '#2563eb',   // blue – wind / info
+  sun:         '#d97706',   // amber – sun (dark enough on white)
+  rain:        '#1d6ea8',   // blue – rain
+  snow:        '#5b8dd9',   // medium blue – snow
+  thunder:     '#7c3aed',   // purple – thunder
+  cloud:       '#64748b',   // slate – cloud
+  green:       '#16a34a',   // rising pressure
+  red:         '#dc2626',   // falling pressure
 };
 
 // ─── Weather icon classification ──────────────────────────────────────────────
@@ -239,7 +239,7 @@ function drawFog(ctx: CanvasRenderingContext2D, cx: number, cy: number) {
 function drawMoon(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number) {
   ctx.save();
   // Crescent: full circle minus an offset circle clipped away
-  ctx.fillStyle = '#e2e8f0';  // cool silver-white
+  ctx.fillStyle = '#f59e0b';  // warm amber – visible on white
   ctx.beginPath();
   ctx.arc(cx, cy, r, 0, Math.PI * 2);
   ctx.fill();
@@ -251,7 +251,7 @@ function drawMoon(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: numb
   ctx.fill();
   ctx.globalCompositeOperation = 'source-over';
 
-  // A couple of faint stars nearby
+  // A couple of small stars nearby
   ctx.fillStyle = '#94a3b8';
   const stars = [
     { x: cx + r + 18, y: cy - r - 10, s: 2.5 },
@@ -314,8 +314,8 @@ function accentColor(kind: IconKind): string {
   switch (kind) {
     case 'sun':            return C.sun;
     case 'partcloud':      return C.sun;
-    case 'moon':           return '#94a3b8';   // cool silver
-    case 'partcloudnight': return '#94a3b8';
+    case 'moon':           return '#f59e0b';   // amber crescent
+    case 'partcloudnight': return '#f59e0b';
     case 'cloud':          return C.cloud;
     case 'rain':           return C.rain;
     case 'sleet':          return C.rain;
