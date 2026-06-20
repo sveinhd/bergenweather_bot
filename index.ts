@@ -1,4 +1,4 @@
-import { BskyAgent } from '@atproto/api';
+import { AtpAgent } from '@atproto/api';
 import * as dotenv from 'dotenv';
 import { CronJob } from 'cron';
 import * as process from 'process';
@@ -25,7 +25,7 @@ const frostBaseUrl =
   'sum(precipitation_amount PT12H)' +
   '&time=latest&incobs=true';
 
-const agent = new BskyAgent({ service: 'https://bsky.social' });
+const agent = new AtpAgent({ service: 'https://bsky.social' });
 
 // ─── Frost types ──────────────────────────────────────────────────────────────
 
@@ -69,6 +69,7 @@ type CelestialResponse = {
     sunset?:  { time?: string | null } | null;
     moonrise?: { time?: string | null } | null;
     moonset?:  { time?: string | null } | null;
+    moonphase?: { value?: number | null } | null;
   };
 };
 
@@ -194,10 +195,11 @@ async function fetchSunriseSunset(frostData: FrostResponse): Promise<{ sunrise?:
 
   const [sunData, moonData] = await Promise.all([fetchCelestial('sun'), fetchCelestial('moon')]);
   return {
-    sunrise:  formatSunEventTime(sunData.properties?.sunrise?.time),
-    sunset:   formatSunEventTime(sunData.properties?.sunset?.time),
-    moonrise: formatSunEventTime(moonData.properties?.moonrise?.time),
-    moonset:  formatSunEventTime(moonData.properties?.moonset?.time),
+    sunrise:   formatSunEventTime(sunData.properties?.sunrise?.time),
+    sunset:    formatSunEventTime(sunData.properties?.sunset?.time),
+    moonrise:  formatSunEventTime(moonData.properties?.moonrise?.time),
+    moonset:   formatSunEventTime(moonData.properties?.moonset?.time),
+    moonPhase: moonData.properties?.moonphase?.value ?? undefined,
   };
 }
 
@@ -279,7 +281,7 @@ async function main() {
   const feelsLike = windChill(temperature, windSpeed);
 
   // Sunrise / sunset
-  const { sunrise, sunset, moonrise, moonset } = await fetchSunriseSunset(frostData);
+  const { sunrise, sunset, moonrise, moonset, moonPhase } = await fetchSunriseSunset(frostData);
 
   // ── Night detection ───────────────────────────────────────────────────────
   function parseLocalHHMM(hhmm: string, referenceDate: Date): Date {
@@ -316,6 +318,9 @@ async function main() {
     observationTime,
     sunrise,
     sunset,
+    moonrise,
+    moonset,
+    moonPhase,
     isNight,
     tempMin:          Number.isFinite(tempMin)    ? tempMin    : undefined,
     tempMax:          Number.isFinite(tempMax)    ? tempMax    : undefined,

@@ -17,6 +17,9 @@ export type WeatherImageData = {
   observationTime: string;      // ISO 8601
   sunrise?: string;             // HH:MM local
   sunset?: string;              // HH:MM local
+  moonrise?: string;            // HH:MM local
+  moonset?: string;             // HH:MM local
+  moonPhase?: number;           // degrees 0-360: 0=new, 90=first quarter, 180=full, 270=last quarter
   isNight?: boolean;            // true when current time is before sunrise or after sunset
   tempMin?: number;             // °C daily minimum (min(air_temperature PT1D))
   tempMax?: number;             // °C daily maximum (max(air_temperature PT1D))
@@ -274,6 +277,83 @@ function drawRainGauge(ctx: CanvasRenderingContext2D, cx: number, cy: number, mm
 }
 
 
+
+// ─── Moon phase ───────────────────────────────────────────────────────────────
+
+function moonPhaseLabel(deg: number): string {
+  if (deg < 5 || deg >= 355)  return 'New moon';
+  if (deg < 85)               return 'Waxing crescent';
+  if (deg < 95)               return 'First quarter';
+  if (deg < 175)              return 'Waxing gibbous';
+  if (deg < 185)              return 'Full moon';
+  if (deg < 265)              return 'Waning gibbous';
+  if (deg < 275)              return 'Last quarter';
+  return 'Waning crescent';
+}
+
+function drawMoonPhaseDisc(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number, deg: number) {
+  ctx.save();
+
+  // Dark base disc
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.fillStyle = '#cbd5e1';
+  ctx.fill();
+
+  const waxing = deg <= 180;
+  // termX: cos(0)=1 (new, unlit), cos(180)=-1 (full, all lit)
+  const termX = Math.cos(deg * Math.PI / 180) * r;
+
+  if (deg > 5 && deg < 355) {
+    ctx.save();
+    // Clip to disc
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.clip();
+
+    // Fill lit semicircle
+    ctx.beginPath();
+    if (waxing) {
+      ctx.arc(cx, cy, r, -Math.PI / 2, Math.PI / 2);
+    } else {
+      ctx.arc(cx, cy, r, Math.PI / 2, -Math.PI / 2);
+    }
+    ctx.closePath();
+    ctx.fillStyle = '#fef9c3';
+    ctx.fill();
+
+    // Terminator ellipse
+    const ellipseRx = Math.abs(termX);
+    if (ellipseRx > 1) {
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, ellipseRx, r, 0, 0, Math.PI * 2);
+      ctx.fillStyle = waxing
+        ? (termX > 0 ? '#cbd5e1' : '#fef9c3')   // waxing: dark cuts crescent or light adds gibbous
+        : (termX < 0 ? '#cbd5e1' : '#fef9c3');   // waning: mirror
+      ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  // Full moon — bright disc
+  if (deg >= 175 && deg <= 185) {
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fillStyle = '#fef9c3';
+    ctx.fill();
+  }
+
+  // Outline
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.strokeStyle = '#94a3b8';
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  ctx.restore();
+}
+
+// ─── Wind compass rose ────────────────────────────────────────────────────────
 
 function drawCompass(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number, fromDeg: number) {
   // Outer circle
@@ -602,13 +682,84 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
     });
   }
 
-  // ── Sunrise / sunset ──────────────────────────────────────────────────────────
-  if (data.sunrise && data.sunset) {
+  // ── Sunrise / sunset + moonrise / moonset ─────────────────────────────────────
+  const celestialY = 436;
+  let celestialX = PAD;
+
+  function drawMiniSun(x: number, y: number) {
+    ctx.save();
+    ctx.strokeStyle = '#d97706';
+    ctx.lineWidth = 1.8;
+    ctx.lineCap = 'round';
+    ctx.beginPath();
+    ctx.arc(x, y, 7, 0, Math.PI * 2);
+    ctx.stroke();
+    for (let i = 0; i < 8; i++) {
+      const a = (i * Math.PI) / 4;
+      ctx.beginPath();
+      ctx.moveTo(x + Math.cos(a) * 9.5, y + Math.sin(a) * 9.5);
+      ctx.lineTo(x + Math.cos(a) * 12,  y + Math.sin(a) * 12);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function drawMiniMoon(x: number, y: number) {
+    ctx.save();
+    ctx.fillStyle = '#94a3b8';
+    ctx.beginPath();
+    ctx.arc(x, y, 7, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.beginPath();
+    ctx.arc(x + 4, y - 1, 5.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.restore();
+  }
+
+  if (data.sunrise || data.sunset) {
+    drawMiniSun(celestialX + 13, celestialY);
     setFont(ctx, 12, 'normal');
-    ctx.fillStyle = C.secondary;
+    ctx.fillStyle = C.label;
     ctx.textAlign = 'left';
-    ctx.textBaseline = 'top';
-    ctx.fillText(`☀  ${data.sunrise} ↑   ${data.sunset} ↓`, PAD, 430);
+    ctx.textBaseline = 'middle';
+    if (data.sunrise) {
+      ctx.fillText(`↑ ${data.sunrise}`, celestialX + 28, celestialY);
+      celestialX += 28 + ctx.measureText(`↑ ${data.sunrise}`).width + 10;
+    }
+    if (data.sunset) {
+      ctx.fillText(`↓ ${data.sunset}`, celestialX, celestialY);
+      celestialX += ctx.measureText(`↓ ${data.sunset}`).width + 24;
+    }
+  }
+
+  if (data.moonrise || data.moonset) {
+    drawMiniMoon(celestialX + 13, celestialY);
+    setFont(ctx, 12, 'normal');
+    ctx.fillStyle = C.label;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    celestialX += 28;
+    if (data.moonrise) {
+      ctx.fillText(`↑ ${data.moonrise}`, celestialX, celestialY);
+      celestialX += ctx.measureText(`↑ ${data.moonrise}`).width + 10;
+    }
+    if (data.moonset) {
+      ctx.fillText(`↓ ${data.moonset}`, celestialX, celestialY);
+      celestialX += ctx.measureText(`↓ ${data.moonset}`).width + 24;
+    }
+  }
+
+  // Moon phase disc + label
+  if (data.moonPhase !== undefined) {
+    const discR = 10;
+    drawMoonPhaseDisc(ctx, celestialX + discR, celestialY, discR, data.moonPhase);
+    setFont(ctx, 12, 'normal');
+    ctx.fillStyle = C.label;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(moonPhaseLabel(data.moonPhase), celestialX + discR * 2 + 6, celestialY);
   }
 
   // ── Credit ────────────────────────────────────────────────────────────────────
