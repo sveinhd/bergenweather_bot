@@ -1,0 +1,4893 @@
+{
+  "data": {
+    "tstype": "base",
+    "tseries": [
+      {
+        "header": {
+          "id": {
+            "level": 200,
+            "paramid": 1,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 330
+          },
+          "extra": {
+            "element": {
+              "id": "tendency_of_surface_air_pressure_type",
+              "unit": "1",
+              "name": "Air pressure characteristic (3 h)",
+              "description": "Characteristic of the pressure tendency over the last three hours given by code 0-8, indicating whether pressure is rising, falling or steady.",
+              "category": "Atmospheric pressure",
+              "cf": {
+                "status": "METNO-name"
+              },
+              "codetable": "barografkurvens forløp",
+              "elementcodes": [
+                "AA"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "default": 200,
+                  "unit": "cm",
+                  "value": 200
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2007-04-16T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2007-04-16T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open",
+                "operational_status": "open"
+              },
+              "timeresolution": "PT1H",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2007-04-16T00:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0110000000000010",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 3
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "paramid": 10,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 316
+          },
+          "extra": {
+            "element": {
+              "id": "indicator_station_type_weather",
+              "unit": "1",
+              "name": "Indicator for type of station and type of weather information (SYNOP)",
+              "description": "Indicator for type of station operation (manned or automatic) for the station generating the SYNOP message. Also includes information about whether present and past weather data is included in the message and which codetables have been used for past and present weather. Uses the WMO code table 1860",
+              "category": "Metadata",
+              "cf": {
+                "status": "METNO-name"
+              },
+              "codetable": "Værkodeindikator",
+              "elementcodes": [
+                "IX"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "unit": "cm",
+                  "value": 200
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2017-03-08T09:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2017-03-08T09:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open"
+              },
+              "timeresolution": "PT6H",
+              "type": "manual"
+            }
+          },
+          "available": {
+            "from": "2017-03-08T09:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0100000000000000",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 1
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "paramid": 14,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 316
+          },
+          "extra": {
+            "element": {
+              "id": "low_type_cloud_area_fraction",
+              "unit": "octas",
+              "name": "Cloud cover, lowest clouds",
+              "description": "Amount of all low clouds (CL), or -amount of middle clouds (CM) if there are no low clouds. It is registered using a code 0 - 8 describing how many eights of the sky are covered by low clouds (0 = no clouds, 8 = completely overcast. Code -3 or 9 = cloud cover can not be estimated because the sky is obstructed from view because of fog, drifting snow etc. Code -3 is presented as .).",
+              "category": "Clouds",
+              "cf": {
+                "status": "CF-name",
+                "name": "low_type_cloud_area_fraction",
+                "unit": "1",
+                "version": "44"
+              },
+              "codetable": "Samlet skymengde",
+              "elementcodes": [
+                "NH"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "unit": "cm",
+                  "value": 200
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2014-01-13T06:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2014-01-13T06:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open"
+              },
+              "timeresolution": "PT6H",
+              "type": "manual"
+            }
+          },
+          "available": {
+            "from": "2014-01-13T06:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0110000000100010",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 3
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "paramid": 15,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 316
+          },
+          "extra": {
+            "element": {
+              "id": "cloud_area_fraction",
+              "unit": "octas",
+              "name": "Cloud cover",
+              "description": "Total cloud cover is registered using a code 0 - 8 describing how many eights of the sky are covered by clouds (0 = no clouds, 8 = completely overcast. Code -3 or 9 = cloud cover can not be estimated because the sky is obstructed from view because of fog, drifting snow etc. Code -3 is presented as .).",
+              "category": "Clouds",
+              "cf": {
+                "status": "CF-name",
+                "name": "cloud_area_fraction",
+                "unit": "1",
+                "version": "44"
+              },
+              "codetable": "Samlet skymengde",
+              "elementcodes": [
+                "NN"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "unit": "cm",
+                  "value": 200
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2014-01-13T06:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2014-01-13T06:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open"
+              },
+              "timeresolution": "PT6H",
+              "type": "manual"
+            }
+          },
+          "available": {
+            "from": "2014-01-13T06:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0110000000100010",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 8
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "paramid": 23,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 316
+          },
+          "extra": {
+            "element": {
+              "id": "low_type_cloud",
+              "unit": "1",
+              "name": "Type of low clouds",
+              "description": "Cloud type, low clouds (base 0 - approx 2500 meter), by code 0 - 9 (Cu, Cb, St, Sc, ref cloud atlas).",
+              "category": "Clouds",
+              "cf": {
+                "status": "METNO-name"
+              },
+              "codetable": "Lave skyer",
+              "elementcodes": [
+                "CL"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "unit": "cm",
+                  "value": 200
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2014-01-13T06:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2014-01-13T06:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open"
+              },
+              "timeresolution": "PT6H",
+              "type": "manual"
+            }
+          },
+          "available": {
+            "from": "2014-01-13T06:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0110000000000010",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 7
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "paramid": 24,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 316
+          },
+          "extra": {
+            "element": {
+              "id": "medium_type_cloud",
+              "unit": "1",
+              "name": "Type of medium clouds",
+              "description": "Cloud type, medium clouds (base approx 2500-6000 meter), by code 0 - 9 (As, Ac, Ns, ref cloud atlas).",
+              "category": "Clouds",
+              "cf": {
+                "status": "METNO-name"
+              },
+              "codetable": "Mellomhøye skyer",
+              "elementcodes": [
+                "CM"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "unit": "cm",
+                  "value": 200
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2014-01-13T09:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2014-01-13T09:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open"
+              },
+              "timeresolution": "PT6H",
+              "type": "manual"
+            }
+          },
+          "available": {
+            "from": "2014-01-13T09:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0110000000000010",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 7
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "paramid": 41,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 316
+          },
+          "extra": {
+            "element": {
+              "id": "weather_type",
+              "unit": "1",
+              "name": "Present weather",
+              "description": "Weather at observation time, given as synoptic code 00-99",
+              "category": "Weather",
+              "cf": {
+                "status": "METNO-name"
+              },
+              "codetable": "Været ved observasjonstida",
+              "elementcodes": [
+                "WW"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "unit": "cm",
+                  "value": 200
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2014-01-13T06:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2014-01-13T06:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open"
+              },
+              "timeresolution": "PT6H",
+              "type": "manual"
+            }
+          },
+          "available": {
+            "from": "2014-01-13T06:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0110000000100010",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 2
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "paramid": 42,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 316
+          },
+          "extra": {
+            "element": {
+              "id": "over_time(weather_type_primary_significance)",
+              "unit": "1",
+              "name": "Prominent weather",
+              "description": "Highest code for weather (code 0 - 9). Timespan of this observation depends on time of day: At reference time 00, 06, 12, 18 UTC: over last 6 hours. At reference time 03, 09, 15, 21 UTC: over last 3 hours. At reference time 01,02,04,05,07 … 22,23 UTC: over last hour.",
+              "calculationmethods": [
+                "A method to describe the observation of what has happened since last observation, often used for type of weather."
+              ],
+              "category": "Weather",
+              "cf": {
+                "status": "METNO-name"
+              },
+              "codetable": "Været siden forrige hovedobservasjon",
+              "elementcodes": [
+                "W1"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "unit": "cm",
+                  "value": 200
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2014-01-13T06:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2014-01-13T06:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open"
+              },
+              "timeresolution": "PT6H",
+              "type": "manual"
+            }
+          },
+          "available": {
+            "from": "2014-01-13T06:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0110000000000010",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 6
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "paramid": 43,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 316
+          },
+          "extra": {
+            "element": {
+              "id": "over_time(weather_type_secondary_significance)",
+              "unit": "1",
+              "name": "Second prominent weather",
+              "description": "Second highest code for weather (code 0 - 9). Timespan of this observation depends on time of day: At reference time 00, 06, 12, 18 UTC: over last 6 hours. At reference time 03, 09, 15, 21 UTC: over last 3 hours. At reference time 01,02,04,05,07 … 22,23 UTC: over last hour.",
+              "calculationmethods": [
+                "A method to describe the observation of what has happened since last observation, often used for type of weather."
+              ],
+              "category": "Weather",
+              "cf": {
+                "status": "METNO-name"
+              },
+              "codetable": "Været siden forrige hovedobservasjon",
+              "elementcodes": [
+                "W2"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "unit": "cm",
+                  "value": 200
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2014-01-13T06:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2014-01-13T06:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open"
+              },
+              "timeresolution": "PT6H",
+              "type": "manual"
+            }
+          },
+          "available": {
+            "from": "2014-01-13T06:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0110000000000010",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 2
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "paramid": 55,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 316
+          },
+          "extra": {
+            "element": {
+              "id": "cloud_base_height",
+              "unit": "m",
+              "name": "Cloud base height",
+              "description": "Height of lowest cloud base, reported with code, converted to meters. Code -3 = cloud cover can not be estimated due to fog, drifting snow etc. Code -3 is presented as '.'  (in synop code=9))",
+              "category": "Clouds",
+              "cf": {
+                "status": "METNO-name"
+              },
+              "elementcodes": [
+                "HL"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "unit": "cm",
+                  "value": 200
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2014-01-13T06:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2014-01-13T06:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open"
+              },
+              "timeresolution": "PT6H",
+              "type": "manual"
+            }
+          },
+          "available": {
+            "from": "2014-01-13T06:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0110000000100000",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 200
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "level": 1000,
+            "paramid": 61,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 330
+          },
+          "extra": {
+            "element": {
+              "id": "wind_from_direction",
+              "unit": "degrees",
+              "name": "Wind direction",
+              "description": "Mean wind direction over the last ten minutes before the observation time. Wind direction is defined as the direction from which the wind blows and is registered in degrees, where 360 degrees is north and 90 degrees is east. ",
+              "category": "Wind",
+              "cf": {
+                "status": "CF-name",
+                "name": "wind_from_direction",
+                "unit": "degree",
+                "version": "44"
+              },
+              "elementcodes": [
+                "DD",
+                "X1DD",
+                "X2DD",
+                "DD18",
+                "DD12",
+                "DD06",
+                "DD2",
+                "DD4",
+                "DD5",
+                "DD3",
+                "DD8"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "default": 1000,
+                  "unit": "cm",
+                  "value": 1000
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2007-04-16T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2007-04-16T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open",
+                "operational_status": "open"
+              },
+              "timeresolution": "PT1H",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2007-04-16T00:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0111000000000010",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 188.3
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "level": 1000,
+            "paramid": 73,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 330
+          },
+          "extra": {
+            "element": {
+              "id": "max_wind_speed(wind_from_direction PT1H)",
+              "unit": "degrees",
+              "name": "Wind direction of maximum mean wind speed (1 h)",
+              "description": "Wind direction at maximum mean wind speed over the last hour",
+              "calculationmethods": [
+                "Frå-retninga som tilhøyrer maksimal vindhastigheit i den gitte perioden"
+              ],
+              "category": "Wind",
+              "cf": {
+                "status": "CF-name",
+                "name": "wind_from_direction",
+                "unit": "degree",
+                "version": "44"
+              },
+              "elementcodes": [
+                "DX",
+                "X1DX",
+                "X1DX_1",
+                "DX2_1",
+                "DX_1",
+                "DX4_1",
+                "DX8_1"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "default": 1000,
+                  "unit": "cm",
+                  "value": 1000
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2007-04-16T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2007-04-16T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open",
+                "operational_status": "open"
+              },
+              "timeresolution": "PT1H",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2007-04-16T00:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0101000000000000",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 181.3
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "level": 1000,
+            "paramid": 81,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 330
+          },
+          "extra": {
+            "element": {
+              "id": "wind_speed",
+              "unit": "m/s",
+              "name": "Mean wind speed",
+              "description": "Mean wind speed is registered as a mean value of the wind speed over the last ten minutes before the observation time. (default: 10 meters above ground, some stations have measurements at 2 meters)",
+              "category": "Wind",
+              "cf": {
+                "status": "CF-name",
+                "name": "wind_speed",
+                "unit": "m s-1",
+                "version": "44"
+              },
+              "elementcodes": [
+                "FF2",
+                "X1FF",
+                "FF",
+                "X2FF",
+                "FF4",
+                "FF5",
+                "FF3",
+                "FF100",
+                "FF114",
+                "FF20",
+                "FF30",
+                "FF8"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "default": 1000,
+                  "unit": "cm",
+                  "value": 1000
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2007-04-16T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2007-04-16T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open",
+                "operational_status": "open"
+              },
+              "timeresolution": "PT1H",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2007-04-16T00:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0111100000100010",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 5
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "level": 1000,
+            "paramid": 84,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 330
+          },
+          "extra": {
+            "element": {
+              "id": "max(wind_speed_of_gust PT10M)",
+              "unit": "m/s",
+              "name": "Maximum wind gust (10 min)",
+              "description": "Maximum wind gust for the last ten minutes",
+              "calculationmethods": [
+                "Maximum value observed or calculated in the given period"
+              ],
+              "category": "Wind",
+              "cf": {
+                "status": "CF-name",
+                "name": "wind_speed_of_gust",
+                "unit": "m s-1",
+                "version": "44"
+              },
+              "elementcodes": [
+                "X2FG_010",
+                "FG_010",
+                "X1FG_010",
+                "FG3_010"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "default": 1000,
+                  "unit": "cm",
+                  "value": 1000
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2007-04-16T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2007-04-16T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open",
+                "operational_status": "open"
+              },
+              "timeresolution": "PT1H",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2007-04-16T00:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0101000000000000",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 7.7
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "level": 1000,
+            "paramid": 87,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 330
+          },
+          "extra": {
+            "element": {
+              "id": "max(wind_speed PT1H)",
+              "unit": "m/s",
+              "name": "Maximum mean wind speed (1 h)",
+              "description": "Hourly maximum mean wind speed",
+              "calculationmethods": [
+                "Maximum value observed or calculated in the given period"
+              ],
+              "category": "Wind",
+              "cf": {
+                "status": "CF-name",
+                "name": "wind_speed",
+                "unit": "m s-1",
+                "version": "44"
+              },
+              "elementcodes": [
+                "X1FX",
+                "FX_1",
+                "FX2_1",
+                "X1FX_1",
+                "FX4_1",
+                "FX5_1",
+                "FX8_1"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "default": 1000,
+                  "unit": "cm",
+                  "value": 1000
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2007-04-16T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2007-04-16T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open",
+                "operational_status": "open"
+              },
+              "timeresolution": "PT1H",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2007-04-16T00:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0111000000000010",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 7
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "level": 1000,
+            "paramid": 90,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 330
+          },
+          "extra": {
+            "element": {
+              "id": "max(wind_speed_of_gust PT1H)",
+              "unit": "m/s",
+              "name": "Maximum wind gust (1 h)",
+              "description": "Hourly maximum wind gust",
+              "calculationmethods": [
+                "Maximum value observed or calculated in the given period"
+              ],
+              "category": "Wind",
+              "cf": {
+                "status": "CF-name",
+                "name": "wind_speed_of_gust",
+                "unit": "m s-1",
+                "version": "44"
+              },
+              "elementcodes": [
+                "FG2_1",
+                "FG_1",
+                "X1FG_1",
+                "FG4_1",
+                "FG8_1"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "default": 1000,
+                  "unit": "cm",
+                  "value": 1000
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2007-04-16T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2007-04-16T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open",
+                "operational_status": "open"
+              },
+              "timeresolution": "PT1H",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2007-04-16T00:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0111000000000000",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 11
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "level": 200,
+            "paramid": 104,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 330
+          },
+          "extra": {
+            "element": {
+              "id": "accumulated(precipitation_amount)",
+              "unit": "mm",
+              "name": "Precipitation in gauge",
+              "description": "Total precipitation amount in gauge (accumulated since last emptying). Timing for emptying and algoritm for calculating the precipitation amount depends on sensortype",
+              "calculationmethods": [
+                "Accumulated from 0, which means the sum over an unknown period."
+              ],
+              "category": "Precipitation",
+              "cf": {
+                "status": "CF-name",
+                "name": "precipitation_amount",
+                "unit": "kg m-2",
+                "version": "44"
+              },
+              "elementcodes": [
+                "RA",
+                "RACPLUV_ALGOR_1",
+                "X2RA",
+                "RAC_01"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "default": 200,
+                  "unit": "cm",
+                  "value": 200
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2007-04-16T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2007-04-16T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open",
+                "operational_status": "open"
+              },
+              "timeresolution": "PT1H",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2007-04-16T00:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0101000000000110",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 166.1
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "level": 200,
+            "paramid": 106,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 330
+          },
+          "extra": {
+            "element": {
+              "id": "sum(precipitation_amount PT1H)",
+              "unit": "mm",
+              "name": "Precipitation (1 h)",
+              "description": "Amount of precipitation per hour",
+              "calculationmethods": [
+                "The arithmetic sum of data values or accumulated value in a given period."
+              ],
+              "category": "Precipitation",
+              "cf": {
+                "status": "CF-name",
+                "name": "precipitation_amount",
+                "unit": "kg m-2",
+                "version": "44"
+              },
+              "elementcodes": [
+                "RR_1",
+                "X2RR_1",
+                "X1RR",
+                "X1RR_1"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "default": 200,
+                  "unit": "cm",
+                  "value": 200
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2011-04-06T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2011-04-06T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open",
+                "operational_status": "open"
+              },
+              "timeresolution": "PT1H",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2011-04-06T00:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0110000000000000",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 0
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "paramid": 121,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 501
+          },
+          "extra": {
+            "element": {
+              "id": "sum(duration_of_sunshine PT1H)",
+              "unit": "minutes",
+              "name": "Sunshine duration (1 h)",
+              "description": "Number of minutes of sunshine over the last hour.",
+              "calculationmethods": [
+                "The arithmetic sum of data values or accumulated value in a given period."
+              ],
+              "category": "Sunshine",
+              "cf": {
+                "status": "CF-name",
+                "name": "duration_of_sunshine",
+                "unit": "s",
+                "version": "44"
+              },
+              "elementcodes": [
+                "OT_1"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {},
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2025-01-21T13:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2025-01-21T13:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open"
+              },
+              "timeresolution": "PT1H",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2025-01-21T13:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0100000000000000",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 0
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "level": 200,
+            "paramid": 123,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 330
+          },
+          "extra": {
+            "element": {
+              "id": "sum(duration_of_precipitation PT1H)",
+              "unit": "minutes",
+              "name": "Number of minutes with precipitation during the last hour",
+              "description": "Number of minutes where precipitation has been detected during the last 10 minutes.",
+              "calculationmethods": [
+                "The arithmetic sum of data values or accumulated value in a given period."
+              ],
+              "category": "Precipitation",
+              "cf": {
+                "status": "METNO-name"
+              },
+              "elementcodes": [
+                "RT_1"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "default": 200,
+                  "unit": "cm",
+                  "value": 200
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2007-04-16T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2007-04-16T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open",
+                "operational_status": "open"
+              },
+              "timeresolution": "PT1H",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2007-04-16T00:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0111000000000000",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 0
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "level": 200,
+            "paramid": 173,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 330
+          },
+          "extra": {
+            "element": {
+              "id": "surface_air_pressure",
+              "unit": "hPa",
+              "name": "Air pressure at station level",
+              "description": "Air pressure at the station. The parameter is usually called QFE in aviation and shows the measured air pressure reduced to the reference height of the station.",
+              "category": "Atmospheric pressure",
+              "cf": {
+                "status": "CF-name",
+                "name": "surface_air_pressure",
+                "unit": "Pa",
+                "version": "44"
+              },
+              "elementcodes": [
+                "X1PO",
+                "PO",
+                "PB"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "default": 200,
+                  "unit": "cm",
+                  "value": 200
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2007-04-16T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2007-04-16T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open",
+                "operational_status": "open"
+              },
+              "timeresolution": "PT1H",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2007-04-16T00:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0111000000000000",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 1006.9
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "paramid": 177,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 330
+          },
+          "extra": {
+            "element": {
+              "id": "over_time(tendency_of_surface_air_pressure PT3H)",
+              "unit": "hPa",
+              "name": "Baromeric tendency (3 h)",
+              "description": "Barometer tendency, i.e. change over the last three hours",
+              "calculationmethods": [
+                "A method to describe the observation of what has happened since last observation, often used for type of weather."
+              ],
+              "category": "Atmospheric pressure",
+              "cf": {
+                "status": "CF-name",
+                "name": "tendency_of_surface_air_pressure",
+                "unit": "Pa s-1",
+                "version": "44"
+              },
+              "elementcodes": [
+                "PP"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {},
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2007-04-16T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2007-04-16T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open"
+              },
+              "timeresolution": "PT1H",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2007-04-16T00:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0111000000000010",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 1.5
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "paramid": 178,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 330
+          },
+          "extra": {
+            "element": {
+              "id": "air_pressure_at_sea_level",
+              "unit": "hPa",
+              "name": "Air pressure at sea level",
+              "description": "Air pressure reduced to mean sea level. The parameter is usually called QFF in aviation and shows the measured air pressure reduced to mean sea level by applying actual atmospheric conditions.",
+              "category": "Atmospheric pressure",
+              "cf": {
+                "status": "CF-name",
+                "name": "air_pressure_at_sea_level",
+                "unit": "Pa",
+                "version": "44"
+              },
+              "elementcodes": [
+                "PR",
+                "X1PR"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {},
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2007-04-16T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2007-04-16T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open"
+              },
+              "timeresolution": "PT1H",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2007-04-16T00:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0101100000000010",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 1011.2
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "level": 200,
+            "paramid": 210,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 501
+          },
+          "extra": {
+            "element": {
+              "id": "mean(surface_downwelling_longwave_flux_in_air PT1H)",
+              "unit": "W/m2",
+              "name": "Mean reflected longwave radiation (1 h)",
+              "description": "Mean reflected longwave radiation per hour. The part of the longwave radiation emitted by the Earth that is reflected back again by the atmosphere. The instrument measures the downwelling radiation flux through a horizontal surface (W/m2).",
+              "calculationmethods": [
+                "Standard arithmetic mean value for the given period"
+              ],
+              "category": "Radiation",
+              "cf": {
+                "status": "CF-name",
+                "name": "surface_downwelling_longwave_flux_in_air",
+                "unit": "W m-2",
+                "version": "44"
+              },
+              "elementcodes": [
+                "QLI",
+                "QLI_01"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "default": 200,
+                  "unit": "cm",
+                  "value": 200
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2025-01-21T13:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2025-01-21T13:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open",
+                "operational_status": "open"
+              },
+              "timeresolution": "PT1H",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2025-01-21T13:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0100000000000000",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 387
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "level": 200,
+            "paramid": 211,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 330
+          },
+          "extra": {
+            "element": {
+              "id": "air_temperature",
+              "unit": "degC",
+              "name": "Air temperature",
+              "description": "Air temperature (default 2 m above ground), present value",
+              "category": "Temperature",
+              "cf": {
+                "status": "CF-name",
+                "name": "air_temperature",
+                "unit": "K",
+                "version": "44"
+              },
+              "elementcodes": [
+                "X1TA",
+                "X2TA",
+                "X3TA",
+                "X4TA",
+                "X5TA",
+                "X6TA",
+                "TA25",
+                "TA",
+                "TA10",
+                "TA30",
+                "TA3",
+                "TA1",
+                "TA0050"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "default": 200,
+                  "unit": "cm",
+                  "value": 200
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "1997-06-30T21:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "1"
+                  },
+                  {
+                    "from": "1997-06-30T21:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "1"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2007-04-16T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open",
+                "operational_status": "open"
+              },
+              "timeresolution": "PT1H",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2007-04-16T00:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "1",
+              "kvflagcontrolinfo": "0111100000100010",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 14.9
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "level": 200,
+            "paramid": 213,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 330
+          },
+          "extra": {
+            "element": {
+              "id": "min(air_temperature PT1H)",
+              "unit": "degC",
+              "name": "Minimum air temperature (1 h)",
+              "description": "Lowest recorded air temperature per hour",
+              "calculationmethods": [
+                "Minimum value observed or calculated in the given period"
+              ],
+              "category": "Temperature",
+              "cf": {
+                "status": "CF-name",
+                "name": "air_temperature",
+                "unit": "K",
+                "version": "44"
+              },
+              "elementcodes": [
+                "X1TAN",
+                "X2TAN",
+                "TAN",
+                "TAN10",
+                "TAN30",
+                "TAN1",
+                "TAN0050"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "default": 200,
+                  "unit": "cm",
+                  "value": 200
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "1997-03-13T00:00:00Z",
+                    "to": "2021-08-26T00:00:00Z",
+                    "value": "2"
+                  },
+                  {
+                    "from": "2021-08-26T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "1"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2007-04-16T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open",
+                "operational_status": "open"
+              },
+              "timeresolution": "PT1H",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2007-04-16T00:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "1",
+              "kvflagcontrolinfo": "0111100000000010",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 14.9
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "level": 200,
+            "paramid": 215,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 330
+          },
+          "extra": {
+            "element": {
+              "id": "max(air_temperature PT1H)",
+              "unit": "degC",
+              "name": "Maximum air temperature (1 h)",
+              "description": "Highest recorded air temperature per hour",
+              "calculationmethods": [
+                "Maximum value observed or calculated in the given period"
+              ],
+              "category": "Temperature",
+              "cf": {
+                "status": "CF-name",
+                "name": "air_temperature",
+                "unit": "K",
+                "version": "44"
+              },
+              "elementcodes": [
+                "X1TAX",
+                "X2TAX",
+                "TAX",
+                "TAX10",
+                "TAX30",
+                "TAX1",
+                "TAX0050"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "default": 200,
+                  "unit": "cm",
+                  "value": 200
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "1997-03-13T00:00:00Z",
+                    "to": "2021-08-26T00:00:00Z",
+                    "value": "2"
+                  },
+                  {
+                    "from": "2021-08-26T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "1"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2007-04-16T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open",
+                "operational_status": "open"
+              },
+              "timeresolution": "PT1H",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2007-04-16T00:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "1",
+              "kvflagcontrolinfo": "0111100000000010",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 15.3
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "level": 200,
+            "paramid": 262,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 330
+          },
+          "extra": {
+            "element": {
+              "id": "relative_humidity",
+              "unit": "1/100",
+              "name": "Relative air humidity",
+              "description": "Relative humidity ",
+              "category": "Humidity",
+              "cf": {
+                "status": "CF-name",
+                "name": "relative_humidity",
+                "unit": "1",
+                "version": "44"
+              },
+              "elementcodes": [
+                "X1UU",
+                "UU",
+                "UU1",
+                "UU3",
+                "UU10",
+                "UU0050",
+                "UH"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "default": 200,
+                  "unit": "cm",
+                  "value": 200
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "1957-01-01T00:00:00Z",
+                    "to": "2021-08-26T00:00:00Z",
+                    "value": "2"
+                  },
+                  {
+                    "from": "2021-08-26T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "1"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2007-04-16T00:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open",
+                "operational_status": "open"
+              },
+              "timeresolution": "PT1H",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2007-04-16T00:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "1",
+              "kvflagcontrolinfo": "0101100000000010",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 91.6
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "paramid": 273,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 316
+          },
+          "extra": {
+            "element": {
+              "id": "visibility_in_air_poorest_direction",
+              "unit": "m",
+              "name": "Visibility",
+              "description": "Visibility. Converted from synop code (max 75 km) or metar code (max 10 km).",
+              "category": "Visibility",
+              "cf": {
+                "status": "METNO-name"
+              },
+              "elementcodes": [
+                "VV"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "unit": "cm",
+                  "value": 200
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2014-01-13T06:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2014-01-13T06:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open"
+              },
+              "timeresolution": "PT6H",
+              "type": "manual"
+            }
+          },
+          "available": {
+            "from": "2014-01-13T06:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0110000000100010",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 12000
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "level": 0,
+            "paramid": 281,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 501
+          },
+          "extra": {
+            "element": {
+              "id": "battery_voltage",
+              "unit": "V",
+              "name": "Battery voltage",
+              "description": "Voltage on station battery ",
+              "category": "Operation",
+              "cf": {
+                "status": "METNO-name"
+              },
+              "elementcodes": [
+                "BAT"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "value": 0
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2025-01-21T13:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2025-01-21T13:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open",
+                "operational_status": "open"
+              },
+              "timeresolution": "PT1H",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2025-01-21T13:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0100000000000000",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 12
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "level": 1000,
+            "paramid": 1027,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 330
+          },
+          "extra": {
+            "element": {
+              "id": "over_time(time_of_maximum_wind_speed_of_gust PT1H)",
+              "unit": "1",
+              "name": "Time of maximum wind gust (1 h)",
+              "description": "Time of maximum wind gust occurrence (time format: hhmm)",
+              "calculationmethods": [
+                "A method to describe the observation of what has happened since last observation, often used for type of weather."
+              ],
+              "category": "Wind",
+              "cf": {
+                "status": "METNO-name"
+              },
+              "elementcodes": [
+                "KLFG",
+                "KLFG_1",
+                "X1KLFG_1",
+                "KLFG4_1",
+                "KLFG8_1"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "default": 1000,
+                  "unit": "cm",
+                  "value": 1000
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2015-09-18T08:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2015-09-18T08:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open",
+                "operational_status": "open"
+              },
+              "timeresolution": "PT1H",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2015-09-18T08:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0100000000000000",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 829
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "level": 1000,
+            "paramid": 1028,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 330
+          },
+          "extra": {
+            "element": {
+              "id": "over_time(time_of_maximum_wind_speed PT1H)",
+              "unit": "1",
+              "name": "Time of maximum mean wind speed (1 h)",
+              "description": "Time of maximum wind speed occurrence (time format: hhmm)",
+              "calculationmethods": [
+                "A method to describe the observation of what has happened since last observation, often used for type of weather."
+              ],
+              "category": "Wind",
+              "cf": {
+                "status": "METNO-name"
+              },
+              "elementcodes": [
+                "X1KLFX_1",
+                "KLFX_1",
+                "KLFX",
+                "KLFX4_1",
+                "KLFX8_1"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "default": 1000,
+                  "unit": "cm",
+                  "value": 1000
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2015-09-18T08:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2015-09-18T08:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open",
+                "operational_status": "open"
+              },
+              "timeresolution": "PT1H",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2015-09-18T08:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0100000000000000",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 838
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "level": 200,
+            "paramid": 2070,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 501
+          },
+          "extra": {
+            "element": {
+              "id": "mean(surface_downwelling_shortwave_flux_in_air PT1H)",
+              "unit": "W/m2",
+              "name": "Mean global radiation (1 t)",
+              "description": "Hourly mean global radiation. Global radiation is the total downwelling shortwave radiation from the sun. Shortwave radiation have wavelengths in the area 295-2800 nm and therefore includes ultraviolet, visible and infrared light. The instrument measures the radiation flux through a horizontal surface (W/m2).",
+              "calculationmethods": [
+                "Standard arithmetic mean value for the given period"
+              ],
+              "category": "Radiation",
+              "cf": {
+                "status": "CF-name",
+                "name": "surface_downwelling_shortwave_flux_in_air",
+                "unit": "W m-2",
+                "version": "44"
+              },
+              "elementcodes": [
+                "QSI",
+                "X1QSI"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "default": 200,
+                  "unit": "cm",
+                  "value": 200
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2025-01-21T13:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2025-01-21T13:00:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open",
+                "operational_status": "open"
+              },
+              "timeresolution": "PT1H",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2025-01-21T13:00:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:00:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0100000000000000",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 104.5
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "level": 200,
+            "paramid": 2073,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 508
+          },
+          "extra": {
+            "element": {
+              "id": "mean(surface_downwelling_shortwave_flux_in_air PT1M)",
+              "unit": "W/m2",
+              "name": "Mean global radiation (1 min)",
+              "description": "Mean global radiation over the last minute. Global radiation is the total downwelling shortwave radiation from the sun. Shortwave radiation have wavelengths in the area 295-2800 nm and therefore includes ultraviolet, visible and infrared light. The instrument measures the radiation flux through a horizontal surface (W/m2).",
+              "calculationmethods": [
+                "Standard arithmetic mean value for the given period"
+              ],
+              "category": "Radiation",
+              "cf": {
+                "status": "CF-name",
+                "name": "surface_downwelling_shortwave_flux_in_air",
+                "unit": "W m-2",
+                "version": "44"
+              },
+              "elementcodes": [
+                "QSI_01"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "default": 200,
+                  "unit": "cm",
+                  "value": 200
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2025-01-21T12:50:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2025-01-21T12:50:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open",
+                "operational_status": "open"
+              },
+              "timeresolution": "PT1M",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2025-01-21T12:50:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:19:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0100000000000000",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 55.6
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "level": 200,
+            "paramid": 2101,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 508
+          },
+          "extra": {
+            "element": {
+              "id": "mean(surface_downwelling_longwave_flux_in_air PT1M)",
+              "unit": "W/m2",
+              "name": "Mean reflected longwave radiation (1 min)",
+              "description": "Mean reflected longwave radiation per minute. The part of the longwave radiation emitted by the Earth that is reflected back again by the atmosphere. The instrument measures the downwelling radiation flux through a horizontal surface (W/m2).",
+              "calculationmethods": [
+                "Standard arithmetic mean value for the given period"
+              ],
+              "category": "Radiation",
+              "cf": {
+                "status": "CF-name",
+                "name": "surface_downwelling_longwave_flux_in_air",
+                "unit": "W m-2",
+                "version": "44"
+              },
+              "elementcodes": [
+                "QLI_01"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "default": 200,
+                  "unit": "cm",
+                  "value": 200
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2025-01-21T12:50:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2025-01-21T12:50:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open",
+                "operational_status": "open"
+              },
+              "timeresolution": "PT1M",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2025-01-21T12:50:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:19:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0100000000000000",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 384.2
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "level": 200,
+            "paramid": 2103,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 508
+          },
+          "extra": {
+            "element": {
+              "id": "mean(difference_between_downwelling_longwave_flux_and_instrument_longwave_radiation PT1M)",
+              "unit": "W/m2",
+              "name": "Mean difference between downwelling longwave flux and instrument longwave radiation  (1 min)",
+              "description": "1 minute mean of the difference between the downwelling longwave radiation detected and the longwave radiation emitted by the instrument. Not corrected for instrument temperature",
+              "calculationmethods": [
+                "Standard arithmetic mean value for the given period"
+              ],
+              "category": "Radiation",
+              "cf": {
+                "status": "METNO-name"
+              },
+              "elementcodes": [
+                "QLINETINST_01"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "default": 200,
+                  "unit": "cm",
+                  "value": 200
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2025-01-21T12:50:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2025-01-21T12:50:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open",
+                "operational_status": "open"
+              },
+              "timeresolution": "PT1M",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2025-01-21T12:50:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:19:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0100000000000000",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": -17.3
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "level": 200,
+            "paramid": 2121,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 508
+          },
+          "extra": {
+            "element": {
+              "id": "sum(duration_of_sunshine PT1M)",
+              "unit": "minutes",
+              "name": "Sunshine duration (1 min)",
+              "description": "Sunshine duration over the last minute.",
+              "calculationmethods": [
+                "The arithmetic sum of data values or accumulated value in a given period."
+              ],
+              "category": "Sunshine",
+              "cf": {
+                "status": "CF-name",
+                "name": "duration_of_sunshine",
+                "unit": "s",
+                "version": "44"
+              },
+              "elementcodes": [
+                "OT_01"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "default": 200,
+                  "unit": "cm",
+                  "value": 200
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2025-01-21T12:50:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2025-01-21T12:50:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open",
+                "operational_status": "open"
+              },
+              "timeresolution": "PT1M",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2025-01-21T12:50:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:19:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0100000000000000",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 0
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "level": 0,
+            "paramid": 10225,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 508
+          },
+          "extra": {
+            "element": {
+              "id": "instrument_temperature_longwave_radiation",
+              "unit": "degC",
+              "name": "Instrument temperature longwave radiation",
+              "description": "Instrument temperature longwave radiation",
+              "category": "Operation",
+              "cf": {
+                "status": "METNO-name"
+              },
+              "elementcodes": [
+                "TIQL"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "value": 0
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2025-01-21T12:50:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2025-01-21T12:50:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "sensorinformation": [
+                {
+                  "from": "2025-01-21T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z",
+                  "value": {
+                    "id": "24254",
+                    "model_name": "CGR 4 (Pyrgeometer)",
+                    "place": "Tak"
+                  }
+                }
+              ],
+              "status": {
+                "access_constraint": "open",
+                "operational_status": "open"
+              },
+              "timeresolution": "PT1M",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2025-01-21T12:50:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:19:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0100000000000000",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 16.9311
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "level": 0,
+            "paramid": 10228,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 508
+          },
+          "extra": {
+            "element": {
+              "id": "instrument_temperature_shortwave_radiation",
+              "unit": "degC",
+              "name": "Instrument temperature shortwave radiation",
+              "description": "Instrument temperature shortwave radiation",
+              "category": "Operation",
+              "cf": {
+                "status": "METNO-name"
+              },
+              "elementcodes": [
+                "TIQS"
+              ]
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {
+                  "value": 0
+                },
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2025-01-21T12:50:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2025-01-21T12:50:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "sensorinformation": [
+                {
+                  "from": "2025-01-21T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z",
+                  "value": {
+                    "id": "24258",
+                    "model_name": "CMP 21 (Pyranometer)",
+                    "place": "Tak"
+                  }
+                }
+              ],
+              "status": {
+                "access_constraint": "open",
+                "operational_status": "open"
+              },
+              "timeresolution": "PT1M",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2025-01-21T12:50:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:19:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0100000000000000",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 17.1301
+            }
+          }
+        ]
+      },
+      {
+        "header": {
+          "id": {
+            "paramid": 10514,
+            "permitid": null,
+            "sensor": 0,
+            "stationid": 50540,
+            "stationtype": "",
+            "typeid": 508
+          },
+          "extra": {
+            "element": {
+              "id": "ventilator_status_binary",
+              "unit": "1",
+              "category": "Operation",
+              "cf": {},
+              "codetable": "Ventilatorstatus"
+            },
+            "station": {
+              "alternateids": [
+                {
+                  "key": "GBON",
+                  "id": "null"
+                },
+                {
+                  "key": "WMO",
+                  "id": "1317"
+                },
+                {
+                  "key": "WIGOS",
+                  "id": "0-20000-0-01317"
+                }
+              ],
+              "location": [
+                {
+                  "value": {
+                    "latitude": "60.383000",
+                    "longitude": "5.332700",
+                    "elevation(masl/hs)": "12",
+                    "pressurereferenceelevation(hp)": "35.700000"
+                  },
+                  "from": "1949-11-28T00:00:00Z",
+                  "to": "9999-01-01T00:00:00Z"
+                }
+              ],
+              "name": "BERGEN - FLORIDA",
+              "shortname": "Bergen",
+              "country": "Norge",
+              "countrycode": "NO",
+              "county": "VESTLAND",
+              "municipality": "BERGEN",
+              "organisation": [
+                {
+                  "value": "MET.NO",
+                  "from": "1949-01-01T00:00:00Z",
+                  "to": "0001-01-01T00:00:00Z"
+                }
+              ]
+            },
+            "timeseries": {
+              "geometry": {
+                "level": {},
+                "referencelocation": {}
+              },
+              "quality": {
+                "exposure": [
+                  {
+                    "from": "2025-01-21T12:50:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ],
+                "performance": [
+                  {
+                    "from": "2025-01-21T12:50:00Z",
+                    "to": "9999-01-01T00:00:00Z",
+                    "value": "unknown"
+                  }
+                ]
+              },
+              "status": {
+                "access_constraint": "open"
+              },
+              "timeresolution": "PT1M",
+              "type": "automatic"
+            }
+          },
+          "available": {
+            "from": "2025-01-21T12:50:00Z"
+          }
+        },
+        "observations": [
+          {
+            "time": "2026-06-20T09:19:00Z",
+            "body": {
+              "exposurecategory": "unknown",
+              "kvflagcontrolinfo": "0100000000000000",
+              "kvflaguseinfo": "7000000000000000",
+              "performancecategory": "unknown",
+              "qualitycode": 0,
+              "value": 0
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
