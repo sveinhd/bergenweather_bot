@@ -235,6 +235,25 @@ async function main() {
   // Sunrise / sunset
   const { sunrise, sunset, moonrise, moonset } = await fetchSunriseSunset(frostData);
 
+  // ── Night detection ───────────────────────────────────────────────────────
+  function parseLocalHHMM(hhmm: string, referenceDate: Date): Date {
+    // hhmm is in Europe/Oslo local time e.g. "04:14"
+    const [h, m] = hhmm.split(':').map(Number);
+    // Build a date string in Oslo time and parse it
+    const dateStr = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Europe/Oslo', year: 'numeric', month: '2-digit', day: '2-digit',
+    }).format(referenceDate);
+    return new Date(`${dateStr}T${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:00+02:00`);
+  }
+
+  const obsDate = new Date(observationTime);
+  let isNight = false;
+  if (sunrise && sunset) {
+    const sunriseDate = parseLocalHHMM(sunrise, obsDate);
+    const sunsetDate  = parseLocalHHMM(sunset, obsDate);
+    isNight = obsDate < sunriseDate || obsDate > sunsetDate;
+  }
+
   // ── Generate image ────────────────────────────────────────────────────────
   const imageData: WeatherImageData = {
     temperature,
@@ -250,6 +269,7 @@ async function main() {
     observationTime,
     sunrise,
     sunset,
+    isNight,
   };
 
   const imageBuffer = generateWeatherImage(imageData);
@@ -267,7 +287,7 @@ async function main() {
   const rotatedDir = Number.isFinite(windDirection) ? rotateWindDirection(windDirection) : NaN;
   const windArrow = Number.isFinite(rotatedDir) ? getWindDirectionArrow(rotatedDir) : '';
   const weatherTypeText = getWeatherTypeText(weatherTypeCode);
-  const iconKind = classifyWeatherIcon(weatherTypeCode);
+  const iconKind = classifyWeatherIcon(weatherTypeCode, isNight);
   const iconLabel = weatherIconLabel(iconKind);
 
   const sunText  = sunrise && sunset ? `\n☀ ${sunrise} ↑  ${sunset} ↓` : '';

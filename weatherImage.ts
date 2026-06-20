@@ -16,6 +16,7 @@ export type WeatherImageData = {
   observationTime: string;      // ISO 8601
   sunrise?: string;             // HH:MM local
   sunset?: string;              // HH:MM local
+  isNight?: boolean;            // true when current time is before sunrise or after sunset
 };
 
 // ─── Colour palette ───────────────────────────────────────────────────────────
@@ -40,13 +41,13 @@ const C = {
 
 // ─── Weather icon classification ──────────────────────────────────────────────
 
-type IconKind = 'sun' | 'partcloud' | 'cloud' | 'rain' | 'sleet' | 'snow' | 'thunder' | 'fog';
+type IconKind = 'sun' | 'partcloud' | 'moon' | 'partcloudnight' | 'cloud' | 'rain' | 'sleet' | 'snow' | 'thunder' | 'fog';
 
-export function classifyWeatherIcon(wwCode: number): IconKind {
+export function classifyWeatherIcon(wwCode: number, isNight = false): IconKind {
   if (!Number.isFinite(wwCode)) return 'cloud';
   const w = Math.round(wwCode);
-  if (w <= 2)              return 'sun';
-  if (w <= 9)              return 'partcloud';
+  if (w <= 2)              return isNight ? 'moon' : 'sun';
+  if (w <= 9)              return isNight ? 'partcloudnight' : 'partcloud';
   if (w >= 10 && w <= 19) return 'fog';
   if (w >= 20 && w <= 29) return 'cloud';
   if (w >= 30 && w <= 39) return 'fog';       // dust / sand / haze
@@ -62,14 +63,16 @@ export function classifyWeatherIcon(wwCode: number): IconKind {
 
 export function weatherIconLabel(kind: IconKind): string {
   const map: Record<IconKind, string> = {
-    sun:       'Clear',
-    partcloud: 'Partly cloudy',
-    cloud:     'Cloudy',
-    rain:      'Rain',
-    sleet:     'Sleet',
-    snow:      'Snow',
-    thunder:   'Thunderstorm',
-    fog:       'Fog / mist',
+    sun:            'Clear',
+    partcloud:      'Partly cloudy',
+    moon:           'Clear night',
+    partcloudnight: 'Partly cloudy night',
+    cloud:          'Cloudy',
+    rain:           'Rain',
+    sleet:          'Sleet',
+    snow:           'Snow',
+    thunder:        'Thunderstorm',
+    fog:            'Fog / mist',
   };
   return map[kind];
 }
@@ -211,6 +214,36 @@ function drawFog(ctx: CanvasRenderingContext2D, cx: number, cy: number) {
   ctx.restore();
 }
 
+function drawMoon(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number) {
+  ctx.save();
+  // Crescent: full circle minus an offset circle clipped away
+  ctx.fillStyle = '#e2e8f0';  // cool silver-white
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Erase a chunk to make the crescent using destination-out
+  ctx.globalCompositeOperation = 'destination-out';
+  ctx.beginPath();
+  ctx.arc(cx + r * 0.55, cy - r * 0.1, r * 0.82, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.globalCompositeOperation = 'source-over';
+
+  // A couple of faint stars nearby
+  ctx.fillStyle = '#94a3b8';
+  const stars = [
+    { x: cx + r + 18, y: cy - r - 10, s: 2.5 },
+    { x: cx + r + 32, y: cy - 4,      s: 1.8 },
+    { x: cx + r + 8,  y: cy + r + 8,  s: 2.0 },
+  ];
+  for (const star of stars) {
+    ctx.beginPath();
+    ctx.arc(star.x, star.y, star.s, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
 function drawWeatherIcon(ctx: CanvasRenderingContext2D, kind: IconKind, cx: number, cy: number) {
   switch (kind) {
     case 'sun':
@@ -218,6 +251,13 @@ function drawWeatherIcon(ctx: CanvasRenderingContext2D, kind: IconKind, cx: numb
       break;
     case 'partcloud':
       drawSun(ctx, cx - 16, cy - 16, 24);
+      drawCloud(ctx, cx + 8, cy + 12, 0.8);
+      break;
+    case 'moon':
+      drawMoon(ctx, cx, cy, 36);
+      break;
+    case 'partcloudnight':
+      drawMoon(ctx, cx - 14, cy - 18, 24);
       drawCloud(ctx, cx + 8, cy + 12, 0.8);
       break;
     case 'cloud':
@@ -250,14 +290,16 @@ function drawWeatherIcon(ctx: CanvasRenderingContext2D, kind: IconKind, cx: numb
 
 function accentColor(kind: IconKind): string {
   switch (kind) {
-    case 'sun':      return C.sun;
-    case 'partcloud': return C.sun;
-    case 'cloud':    return C.cloud;
-    case 'rain':     return C.rain;
-    case 'sleet':    return C.rain;
-    case 'snow':     return C.snow;
-    case 'thunder':  return C.thunder;
-    case 'fog':      return C.cloud;
+    case 'sun':            return C.sun;
+    case 'partcloud':      return C.sun;
+    case 'moon':           return '#94a3b8';   // cool silver
+    case 'partcloudnight': return '#94a3b8';
+    case 'cloud':          return C.cloud;
+    case 'rain':           return C.rain;
+    case 'sleet':          return C.rain;
+    case 'snow':           return C.snow;
+    case 'thunder':        return C.thunder;
+    case 'fog':            return C.cloud;
   }
 }
 
@@ -350,7 +392,7 @@ export function generateWeatherImage(data: WeatherImageData): Buffer {
   const canvas = createCanvas(W, H);
   const ctx = canvas.getContext('2d');
 
-  const iconKind = classifyWeatherIcon(data.weatherTypeCode);
+  const iconKind = classifyWeatherIcon(data.weatherTypeCode, data.isNight ?? false);
   const accent = accentColor(iconKind);
 
   // ── Background ──────────────────────────────────────────────────────────────
