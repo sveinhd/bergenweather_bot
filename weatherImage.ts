@@ -26,6 +26,8 @@ export type WeatherImageData = {
   precip1h?: number;            // mm precipitation last hour
   precip12h?: number;           // mm precipitation last 12 hours
   precipYTD?: number;           // mm total precipitation this year (sum of hourly)
+  precipNormal?: number;        // mm climate normal Jan–current month
+  precipNormalPeriod?: string;  // e.g. "1961/1990" or "1991/2020"
   lightningCount?: number;      // total strikes in southern Norway last 24h
   lightningCTG?: number;        // cloud-to-ground strikes only
   stationInfo?: {
@@ -785,8 +787,8 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
 
   // Climate precipitation stats — to the right of gauge
   if (data.precipYTD !== undefined) {
-    const csX = PAD + 160;
-    const csY = 340;
+    const csX   = PAD + 160;
+    const csY   = 332;
     const lineH = 16;
 
     setFont(ctx, 10, 'normal');
@@ -802,6 +804,23 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
     setFont(ctx, 10, 'normal');
     ctx.fillStyle = C.label;
     ctx.fillText('year to date', csX, csY + lineH * 2);
+
+    if (data.precipNormal !== undefined) {
+      // Normal value
+      setFont(ctx, 11, 'normal');
+      ctx.fillStyle = C.label;
+      const periodLabel = data.precipNormalPeriod ? ` (${data.precipNormalPeriod})` : '';
+      ctx.fillText(`normal: ${data.precipNormal.toFixed(0)} mm${periodLabel}`, csX, csY + lineH * 3);
+
+      // Deviation from normal
+      const diff = data.precipYTD - data.precipNormal;
+      const pct  = (diff / data.precipNormal * 100);
+      const sign = diff >= 0 ? '+' : '';
+      const deviationColor = diff >= 0 ? C.accent : '#f97316';
+      setFont(ctx, 11, 'bold');
+      ctx.fillStyle = deviationColor;
+      ctx.fillText(`${sign}${diff.toFixed(0)} mm  (${sign}${pct.toFixed(0)}%)`, csX, csY + lineH * 4);
+    }
   }
 
   // ── Lightning ─────────────────────────────────────────────────────────────────

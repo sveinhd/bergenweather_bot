@@ -109,7 +109,75 @@ async function fetchPrecipYTD(frostId: string): Promise<number | undefined> {
   }
 }
 
-// ─── Lightning ────────────────────────────────────────────────────────────────
+// ─── Precipitation climate normal (frost.met.no climatenormals) ───────────────
+//
+// Fetches monthly normals for sum(precipitation_amount P1M) from SN50540
+// and sums Jan through current month to get a year-to-date normal.
+
+type ClimateNormalResponse = {
+  data?: Array<{
+    sourceId?: string;
+    elementId?: string;
+    period?: string;
+    month?: number;
+    normal?: number;
+  }>;
+};
+
+async function fetchPrecipNormal(frostId: string): Promise<{ value?: number; period?: string }> {
+  const url = new URL('https://frost.met.no/climatenormals/v0.jsonld');
+  url.searchParams.set('sources', 'SN50540');
+  url.searchParams.set('elements', 'sum(precipitation_amount P1M)');
+
+  try {
+    const response = await fetch(url.toString(), {
+      headers: {
+        Authorization: `Basic ${btoa(`${frostId}:`)}`,
+        Accept: 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      console.warn(`PrecipNormal API returned ${response.status}: ${await response.text()}`);
+      return {};
+    }
+
+    const data = await response.json() as ClimateNormalResponse;
+
+    const periods = [...new Set((data.data ?? []).map(d => d.period))];
+    console.log('PrecipNormal available periods:', periods);
+
+    const latestPeriod = periods.filter(Boolean).sort().at(-1);
+    console.log('PrecipNormal using period:', latestPeriod);
+
+    const currentMonth = new Date().getMonth() + 1;
+    let ytdNormal = 0;
+    let found = 0;
+
+    for (const entry of data.data ?? []) {
+      if (entry.period !== latestPeriod) continue;
+      const m = entry.month;
+      const v = entry.normal;
+      if (m !== undefined && m >= 1 && m <= currentMonth && Number.isFinite(v)) {
+        ytdNormal += v as number;
+        found++;
+      }
+    }
+
+    if (found === 0) {
+      console.warn('PrecipNormal: no monthly normals found for period', latestPeriod);
+      return {};
+    }
+
+    console.log(`PrecipNormal YTD (Jan–month ${currentMonth}, ${latestPeriod}): ${ytdNormal.toFixed(1)} mm`);
+    return { value: Math.round(ytdNormal * 10) / 10, period: latestPeriod };
+  } catch (e) {
+    console.warn('PrecipNormal fetch failed:', e);
+    return {};
+  }
+}
+
+
 
 type LightningStrike = {
   time?: string;
@@ -377,8 +445,13 @@ async function uploadWeatherImage(imageBuffer: Buffer) {
 
 async function main() {
   const frostData = await fetchLatestFrostObservation();
-  const stationInfo  = getStationInfo(frostData);
-  const precipYTD    = await fetchPrecipYTD(process.env.FROST_ID!);
+  const stationInfo    = getStationInfo(frostData);
+  const [precipYTD, precipNormalResult] = await Promise.all([
+    fetchPrecipYTD(process.env.FROST_ID!),
+    fetchPrecipNormal(process.env.FROST_ID!),
+  ]);
+  const precipNormal       = precipNormalResult.value;
+  const precipNormalPeriod = precipNormalResult.period;
   const lightningStrikes = await fetchLightning(process.env.FROST_ID!);
   console.log('Station:', stationInfo);
 
@@ -457,6 +530,8 @@ async function main() {
     precip12h:        Number.isFinite(precip12h)  ? precip12h  : undefined,
     stationInfo,
     precipYTD,
+    precipNormal,
+    precipNormalPeriod,
     lightningCount:   lightningStrikes.length > 0 ? lightningStrikes.length : undefined,
     lightningCTG:     lightningStrikes.filter(s => s.cloudIndicator === 0).length || undefined,
   };
