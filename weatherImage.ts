@@ -825,7 +825,7 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
 
   // ── Lightning ─────────────────────────────────────────────────────────────────
   if (data.lightningCount !== undefined && data.lightningCount > 0) {
-    const lx = 500;
+    const lx = 620;
     const ly = 340;
 
     // Lightning bolt icon
@@ -863,7 +863,7 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
   }
   if (data.stationInfo) {
     const s = data.stationInfo;
-    const sx = 340;
+    const sx = 460;
     const sy = 330;
     const lineH = 16;
 
