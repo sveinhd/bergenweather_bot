@@ -25,8 +25,7 @@ export type WeatherImageData = {
   tempMax?: number;             // °C daily maximum (max(air_temperature PT1D))
   precip1h?: number;            // mm precipitation last hour
   precip12h?: number;           // mm precipitation last 12 hours
-  precipAnomaly3M?: number;     // % deviation from 1961-1990 normal over last 3 months
-  precipYTD?: number;           // mm total precipitation this year
+  precipYTD?: number;           // mm total precipitation this year (sum of hourly)
   lightningCount?: number;      // total strikes in southern Norway last 24h
   lightningCTG?: number;        // cloud-to-ground strikes only
   stationInfo?: {
@@ -694,9 +693,8 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
   ctx.fillStyle = trend.color;
   ctx.fillText(trend.label, p2X, SUB_Y);
 
-  // ── Column 3: Humidity ────────────────────────────────────────────────────────
+  // ── Column 3: Humidity dial ───────────────────────────────────────────────────
   const p3X  = c3X + 16;
-  const barW = W - PAD - p3X - 4;
 
   setFont(ctx, 10, 'normal');
   ctx.fillStyle = C.secondary;
@@ -705,22 +703,75 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
   ctx.fillText('HUMIDITY', p3X, LABEL_Y);
 
   if (data.humidity !== undefined) {
-    setFont(ctx, 20, 'bold');
-    ctx.fillStyle = C.primary;
-    ctx.fillText(`${data.humidity.toFixed(0)}%`, p3X, VALUE_Y);
+    const h    = data.humidity;
+    const dcx  = p3X + 50;                          // dial centre x
+    const dcy  = LABEL_Y + 60;                      // dial centre y
+    const dr   = 44;                                 // dial radius
+    const startA = Math.PI * 0.75;
+    const endA   = Math.PI * 2.25;
 
-    // Bar
-    const barY = SUB_Y + 2;
-    const barH = 5;
-    ctx.fillStyle = C.line;
-    ctx.roundRect(p3X, barY, barW, barH, 2);
+    // Humidity colour: amber=dry, green=comfortable, blue=humid
+    const humColor = h < 30 ? '#d97706' : h < 60 ? '#16a34a' : C.accent;
+
+    // Background arc
+    ctx.beginPath();
+    ctx.arc(dcx, dcy, dr, startA, endA);
+    ctx.strokeStyle = C.line;
+    ctx.lineWidth = 7;
+    ctx.lineCap = 'butt';
+    ctx.stroke();
+
+    // Coloured value arc
+    const valA = startA + (h / 100) * (endA - startA);
+    ctx.beginPath();
+    ctx.arc(dcx, dcy, dr, startA, valA);
+    ctx.strokeStyle = humColor;
+    ctx.lineWidth = 7;
+    ctx.stroke();
+
+    // Zone tick marks at 0, 25, 50, 75, 100
+    ctx.lineWidth = 1;
+    for (let t = 0; t <= 100; t += 25) {
+      const a = startA + (t / 100) * (endA - startA);
+      ctx.beginPath();
+      ctx.moveTo(dcx + Math.cos(a) * (dr - 10), dcy + Math.sin(a) * (dr - 10));
+      ctx.lineTo(dcx + Math.cos(a) * (dr + 4),  dcy + Math.sin(a) * (dr + 4));
+      ctx.strokeStyle = C.muted;
+      ctx.stroke();
+    }
+
+    // Needle
+    ctx.save();
+    ctx.translate(dcx, dcy);
+    ctx.rotate(startA + (h / 100) * (endA - startA));
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(dr - 12, 0);
+    ctx.strokeStyle = C.primary;
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(0, 0, 4, 0, Math.PI * 2);
+    ctx.fillStyle = C.primary;
     ctx.fill();
-    ctx.fillStyle = C.accent;
-    ctx.roundRect(p3X, barY, barW * (data.humidity / 100), barH, 2);
-    ctx.fill();
+    ctx.restore();
+
+    // Value label in centre
+    setFont(ctx, 18, 'bold');
+    ctx.fillStyle = humColor;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(`${h.toFixed(0)}%`, dcx, dcy - 10);
+
+    setFont(ctx, 9, 'normal');
+    ctx.fillStyle = C.muted;
+    ctx.fillText('RH', dcx, dcy + 6);
   } else {
     setFont(ctx, 16, 'normal');
     ctx.fillStyle = C.muted;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'top';
     ctx.fillText('—', p3X, VALUE_Y);
   }
 
@@ -733,8 +784,7 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
   }
 
   // Climate precipitation stats — to the right of gauge
-  console.log('precipYTD:', data.precipYTD, 'precipAnomaly3M:', data.precipAnomaly3M);
-  if (data.precipYTD !== undefined || data.precipAnomaly3M !== undefined) {
+  if (data.precipYTD !== undefined) {
     const csX = PAD + 160;
     const csY = 340;
     const lineH = 16;
@@ -745,25 +795,13 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
     ctx.textBaseline = 'top';
     ctx.fillText('PRECIPITATION STATS', csX, csY);
 
-    if (data.precipYTD !== undefined) {
-      setFont(ctx, 12, 'bold');
-      ctx.fillStyle = C.primary;
-      ctx.fillText(`${data.precipYTD.toFixed(0)} mm`, csX, csY + lineH);
-      setFont(ctx, 10, 'normal');
-      ctx.fillStyle = C.label;
-      ctx.fillText('year to date', csX, csY + lineH * 2);
-    }
+    setFont(ctx, 20, 'bold');
+    ctx.fillStyle = C.primary;
+    ctx.fillText(`${data.precipYTD.toFixed(0)} mm`, csX, csY + lineH);
 
-    if (data.precipAnomaly3M !== undefined) {
-      const anomalyColor = data.precipAnomaly3M >= 100 ? C.rain : '#f97316';
-      const sign = data.precipAnomaly3M >= 100 ? '+' : '';
-      setFont(ctx, 12, 'bold');
-      ctx.fillStyle = anomalyColor;
-      ctx.fillText(`${sign}${(data.precipAnomaly3M - 100).toFixed(0)}%`, csX, csY + lineH * 3);
-      setFont(ctx, 10, 'normal');
-      ctx.fillStyle = C.label;
-      ctx.fillText('vs 1961–1990 normal (3 months)', csX, csY + lineH * 4);
-    }
+    setFont(ctx, 10, 'normal');
+    ctx.fillStyle = C.label;
+    ctx.fillText('year to date', csX, csY + lineH * 2);
   }
 
   // ── Lightning ─────────────────────────────────────────────────────────────────

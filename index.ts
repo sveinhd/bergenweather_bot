@@ -63,53 +63,50 @@ type FrostResponse = {
   data?: { tstype?: string; tseries?: FrostSeries[] };
 };
 
-type ClimateStatsResponse = {
-  data?: Array<{
-    elementId?: string;
-    observations?: Array<{ value?: string | number }>;
-  }>;
-};
+// ─── Year-to-date precipitation (frost-rc v1) ────────────────────────────────
 
-async function fetchClimateStats(frostId: string): Promise<{ precipAnomaly3M?: number; precipYTD?: number }> {
-  const headers = {
-    Authorization: `Basic ${btoa(`${frostId}:`)}`,
-    Accept: 'application/json',
-  };
+async function fetchPrecipYTD(frostId: string): Promise<number | undefined> {
+  const now = new Date();
+  const yearStart = `${now.getUTCFullYear()}-01-01T00:00:00Z`;
+  const nowISO    = now.toISOString();
 
-  const fetchElement = async (elementId: string, timeResolution: string): Promise<number | undefined> => {
-    const url = new URL('https://frost.met.no/observations/v0.jsonld');
-    url.searchParams.set('sources', 'SN50540:0');
-    url.searchParams.set('elements', elementId);
-    url.searchParams.set('referencetime', 'latest');
-    url.searchParams.set('timeoffsets', 'PT6H');
-    url.searchParams.set('timeresolutions', timeResolution);
-    url.searchParams.set('timeseriesids', '0');
+  const url = new URL('https://frost-rc.met.no/api/v1/obs/ranked/get');
+  url.searchParams.set('incobs', 'true');
+  url.searchParams.set('stationids', '50540');
+  url.searchParams.set('elementids', 'sum(precipitation_amount PT1H)');
+  url.searchParams.set('time', `${yearStart}/${nowISO}`);
 
-    try {
-      console.log(`Fetching: ${url.toString()}`);
-      const response = await fetch(url.toString(), { headers });
-      if (!response.ok) {
-        console.warn(`Climate stats [${elementId}] returned ${response.status}`);
-        return undefined;
-      }
-      const data = await response.json() as ClimateStatsResponse;
-      const obs = data.data?.[0]?.observations?.at(-1);
-      const val = typeof obs?.value === 'string' ? parseFloat(obs.value) : Number(obs?.value);
-      console.log(`Climate stats [${elementId}]:`, val);
-      return Number.isFinite(val) ? val : undefined;
-    } catch (e) {
-      console.warn(`Climate stats [${elementId}] failed:`, e);
+  try {
+    const response = await fetch(url.toString(), {
+      headers: {
+        Authorization: `Basic ${btoa(`${frostId}:`)}`,
+        Accept: 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      console.warn(`PrecipYTD API returned ${response.status}: ${await response.text()}`);
       return undefined;
     }
-  };
 
-  const [precipAnomaly3M, precipYTD] = await Promise.all([
-    fetchElement('best_estimate_sum(precipitation_amount_anomaly P3M 1961_1990)', 'P3M'),
-    fetchElement('best_estimate_sum(precipitation_amount P1Y)', 'P1Y'),
-  ]);
+    const data = await response.json() as { data?: { tseries?: Array<{ observations?: Array<{ body?: { value?: number } }> }> } };
+    const tseries = data.data?.tseries?.[0];
+    if (!tseries?.observations?.length) {
+      console.warn('PrecipYTD: no observations found');
+      return undefined;
+    }
 
-  console.log('Climate stats:', { precipAnomaly3M, precipYTD });
-  return { precipAnomaly3M, precipYTD };
+    const total = tseries.observations.reduce((sum, obs) => {
+      const v = obs.body?.value;
+      return sum + (Number.isFinite(v) ? (v as number) : 0);
+    }, 0);
+
+    console.log(`PrecipYTD: ${total.toFixed(1)} mm`);
+    return Math.round(total * 10) / 10;
+  } catch (e) {
+    console.warn('PrecipYTD fetch failed:', e);
+    return undefined;
+  }
 }
 
 // ─── Lightning ────────────────────────────────────────────────────────────────
@@ -380,7 +377,8 @@ async function uploadWeatherImage(imageBuffer: Buffer) {
 
 async function main() {
   const frostData = await fetchLatestFrostObservation();
-  const stationInfo = getStationInfo(frostData);
+  const stationInfo  = getStationInfo(frostData);
+  const precipYTD    = await fetchPrecipYTD(process.env.FROST_ID!);
   const lightningStrikes = await fetchLightning(process.env.FROST_ID!);
   console.log('Station:', stationInfo);
 
@@ -458,6 +456,7 @@ async function main() {
     precip1h:         Number.isFinite(precip1h)   ? precip1h   : undefined,
     precip12h:        Number.isFinite(precip12h)  ? precip12h  : undefined,
     stationInfo,
+    precipYTD,
     lightningCount:   lightningStrikes.length > 0 ? lightningStrikes.length : undefined,
     lightningCTG:     lightningStrikes.filter(s => s.cloudIndicator === 0).length || undefined,
   };
