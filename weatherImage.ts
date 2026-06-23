@@ -787,7 +787,7 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
 
   // Climate precipitation stats — to the right of gauge
   if (data.precipYTD !== undefined) {
-    const csX   = PAD + 160;
+    const csX   = PAD + 276;  // 320 — clears rain gauge text which ends ~310
     const csY   = 332;
     const lineH = 16;
 
@@ -878,8 +878,8 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
   // ── Station info ──────────────────────────────────────────────────────────────
   if (data.stationInfo) {
     const s = data.stationInfo;
-    const sx = 340;
-    const sy = 390;
+    const sx = 520;
+    const sy = 332;
     const lineH = 16;
 
     setFont(ctx, 10, 'normal');
@@ -896,11 +896,10 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
     ctx.fillStyle = C.label;
     const lines: string[] = [];
     if (s.lat !== undefined && s.lon !== undefined) {
-      lines.push(`${s.lat.toFixed(4)}° N  ${s.lon.toFixed(4)}° E`);
+      lines.push(`${s.lat.toFixed(4)}°N  ${s.lon.toFixed(4)}°E`);
     }
-    if (s.elevation)  lines.push(`Elevation: ${s.elevation}`);
+    if (s.elevation)  lines.push(`Elev: ${s.elevation}`);
     if (s.wmo)        lines.push(`WMO: ${s.wmo}`);
-    if (s.wigos)      lines.push(`WIGOS: ${s.wigos}`);
 
     lines.forEach((line, i) => {
       ctx.fillText(line, sx, sy + lineH * 2 + i * lineH);
@@ -908,7 +907,7 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
   }
 
   // ── Sunrise / sunset + moonrise / moonset ─────────────────────────────────────
-  const celestialY = 436;
+  const celestialY = 462;
   let celestialX = PAD;
 
   function drawMiniSun(x: number, y: number) {
@@ -992,7 +991,7 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
   ctx.fillStyle = C.muted;
   ctx.textAlign = 'right';
   ctx.textBaseline = 'top';
-  ctx.fillText('Data: MET Norway · frost.met.no  |  Icons: Yr / NRK · yr.no', W - PAD, 462);
+  ctx.fillText('Data: MET Norway · frost.met.no  |  Icons: Yr / NRK · yr.no', W - PAD, 480);
 
   // ── Bottom label ─────────────────────────────────────────────────────────────
   setFont(ctx, 11, 'normal');
