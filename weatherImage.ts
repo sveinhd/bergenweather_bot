@@ -512,7 +512,7 @@ function drawThermometer(ctx: CanvasRenderingContext2D, x: number, y: number, h:
 
 export async function generateWeatherImage(data: WeatherImageData): Promise<Buffer> {
   const W = 800;
-  const H = 520;
+  const H = 540;
   const PAD = 44;
 
   const canvas = createCanvas(W, H);
@@ -806,11 +806,15 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
     ctx.fillText('year to date', csX, csY + lineH * 2);
 
     if (data.precipNormal !== undefined) {
-      // Normal value
       setFont(ctx, 11, 'normal');
       ctx.fillStyle = C.label;
-      const periodLabel = data.precipNormalPeriod ? ` (${data.precipNormalPeriod})` : '';
-      ctx.fillText(`normal: ${data.precipNormal.toFixed(0)} mm${periodLabel}`, csX, csY + lineH * 3);
+      ctx.fillText(`normal: ${data.precipNormal.toFixed(0)} mm`, csX, csY + lineH * 3);
+
+      if (data.precipNormalPeriod) {
+        setFont(ctx, 10, 'normal');
+        ctx.fillStyle = C.muted;
+        ctx.fillText(`period ${data.precipNormalPeriod}`, csX, csY + lineH * 4);
+      }
 
       // Deviation from normal
       const diff = data.precipYTD - data.precipNormal;
@@ -819,18 +823,20 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
       const deviationColor = diff >= 0 ? C.accent : '#f97316';
       setFont(ctx, 11, 'bold');
       ctx.fillStyle = deviationColor;
-      ctx.fillText(`${sign}${diff.toFixed(0)} mm  (${sign}${pct.toFixed(0)}%)`, csX, csY + lineH * 4);
+      ctx.fillText(`${sign}${diff.toFixed(0)} mm  (${sign}${pct.toFixed(0)}%)`, csX, csY + lineH * 5);
     }
   }
 
   // ── Lightning ─────────────────────────────────────────────────────────────────
-  if (data.lightningCount !== undefined && data.lightningCount > 0) {
+  {
     const lx = 620;
-    const ly = 340;
+    const ly = 322;
+    const hasStrikes = data.lightningCount !== undefined && data.lightningCount > 0;
+    const boltColor = hasStrikes ? '#a855f7' : C.muted;
 
     // Lightning bolt icon
     ctx.save();
-    ctx.fillStyle = '#a855f7';
+    ctx.fillStyle = boltColor;
     ctx.beginPath();
     ctx.moveTo(lx + 10, ly);
     ctx.lineTo(lx + 2,  ly + 14);
@@ -849,22 +855,31 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
     ctx.textBaseline = 'top';
     ctx.fillText('LIGHTNING (24H)', lx + 22, ly);
 
-    setFont(ctx, 20, 'bold');
-    ctx.fillStyle = '#a855f7';
-    ctx.fillText(`${data.lightningCount}`, lx + 22, ly + 14);
-
-    setFont(ctx, 10, 'normal');
-    ctx.fillStyle = C.label;
-    ctx.fillText('total strikes · Vestland', lx + 22, ly + 36);
-
-    if (data.lightningCTG !== undefined && data.lightningCTG > 0) {
-      ctx.fillText(`${data.lightningCTG} cloud-to-ground`, lx + 22, ly + 50);
+    if (hasStrikes) {
+      setFont(ctx, 20, 'bold');
+      ctx.fillStyle = '#a855f7';
+      ctx.fillText(`${data.lightningCount}`, lx + 22, ly + 14);
+      setFont(ctx, 10, 'normal');
+      ctx.fillStyle = C.label;
+      ctx.fillText('strikes · 20 km radius', lx + 22, ly + 36);
+      if (data.lightningCTG !== undefined && data.lightningCTG > 0) {
+        ctx.fillText(`${data.lightningCTG} cloud-to-ground`, lx + 22, ly + 50);
+      }
+    } else {
+      setFont(ctx, 13, 'normal');
+      ctx.fillStyle = C.muted;
+      ctx.fillText('No lightning', lx + 22, ly + 14);
+      setFont(ctx, 10, 'normal');
+      ctx.fillStyle = C.muted;
+      ctx.fillText('20 km radius · last 24h', lx + 22, ly + 30);
     }
   }
+
+  // ── Station info ──────────────────────────────────────────────────────────────
   if (data.stationInfo) {
     const s = data.stationInfo;
-    const sx = 460;
-    const sy = 330;
+    const sx = 340;
+    const sy = 390;
     const lineH = 16;
 
     setFont(ctx, 10, 'normal');
@@ -984,7 +999,7 @@ export async function generateWeatherImage(data: WeatherImageData): Promise<Buff
   ctx.fillStyle = C.muted;
   ctx.textAlign = 'left';
   ctx.textBaseline = 'bottom';
-  ctx.fillText('bergenweather.bsky.social', PAD, H - 14);
+  ctx.fillText('weatherobs.bsky.social', PAD, H - 14);
 
   return canvas.toBuffer('image/png');
 }

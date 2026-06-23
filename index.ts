@@ -194,18 +194,40 @@ type LightningRaw = {
   CloudIndicator?: number;
 };
 
-// Vestland county polygon — approx 59.5–61.5°N, 4.5–8°E
-const LIGHTNING_POLYGON = 'POLYGON((4.5 59.5, 8 59.5, 8 61.5, 4.5 61.5, 4.5 59.5))';
+/**
+ * Generate a WKT POLYGON approximating a circle.
+ * @param lat  Centre latitude in degrees
+ * @param lon  Centre longitude in degrees
+ * @param radiusKm  Radius in kilometres
+ * @param points    Number of polygon vertices (default 32)
+ */
+function circlePolygonWKT(lat: number, lon: number, radiusKm: number, points = 32): string {
+  const earthRadiusKm = 6371;
+  const latRad = lat * (Math.PI / 180);
+  const coords: string[] = [];
 
-async function fetchLightning(frostId: string): Promise<LightningStrike[]> {
+  for (let i = 0; i <= points; i++) {
+    const angle = (i / points) * 2 * Math.PI;
+    const dLat  = (radiusKm / earthRadiusKm) * (180 / Math.PI);
+    const dLon  = (radiusKm / earthRadiusKm) * (180 / Math.PI) / Math.cos(latRad);
+    const pLat  = lat + dLat * Math.sin(angle);
+    const pLon  = lon + dLon * Math.cos(angle);
+    coords.push(`${pLon.toFixed(6)} ${pLat.toFixed(6)}`);
+  }
+
+  return `POLYGON((${coords.join(', ')}))`;
+}
+
+async function fetchLightning(frostId: string, lat: number, lon: number): Promise<LightningStrike[]> {
   const now = new Date();
   const from = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
   const to = now.toISOString();
+  const polygon = circlePolygonWKT(lat, lon, 20);
 
   const url = new URL('https://frost-rc.met.no/api/v1/lightning');
   url.searchParams.set('referencetime', `${from}/${to}`);
   url.searchParams.set('format', 'json');
-  url.searchParams.set('geometry', LIGHTNING_POLYGON);
+  url.searchParams.set('geometry', polygon);
 
   try {
     const response = await fetch(url.toString(), {
@@ -364,7 +386,7 @@ async function fetchSunriseSunset(frostData: FrostResponse): Promise<{ sunrise?:
     const r = await fetch(makeUrl(path), {
       headers: {
         Accept: 'application/json',
-        'User-Agent': 'bergenweather-bot/1.0 github.com/sveinhd/bergenweather_bot',
+        'User-Agent': 'weatherobs-bot/1.0 github.com/sveinhd/bergenweather_bot',
       },
     });
     if (!r.ok) throw new Error(`${path} API failed (${r.status}): ${await r.text()}`);
@@ -452,7 +474,12 @@ async function main() {
   ]);
   const precipNormal       = precipNormalResult.value;
   const precipNormalPeriod = precipNormalResult.period;
-  const lightningStrikes = await fetchLightning(process.env.FROST_ID!);
+  const coords = getStationCoordinates(frostData);
+  const lightningStrikes = await fetchLightning(
+    process.env.FROST_ID!,
+    coords?.lat ?? 60.383,
+    coords?.lon ?? 5.3327,
+  );
   console.log('Station:', stationInfo);
 
   // Extract observations
@@ -532,7 +559,7 @@ async function main() {
     precipYTD,
     precipNormal,
     precipNormalPeriod,
-    lightningCount:   lightningStrikes.length > 0 ? lightningStrikes.length : undefined,
+    lightningCount:   lightningStrikes.length,
     lightningCTG:     lightningStrikes.filter(s => s.cloudIndicator === 0).length || undefined,
   };
 
